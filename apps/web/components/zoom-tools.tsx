@@ -1,14 +1,29 @@
-import React from 'react'
+import { Button } from "@repo/ui/button";
+import { Minus, Plus, ZoomIn, ZoomOut } from "lucide-react";
+import React from "react";
 
 const ZoomTools = () => {
   return (
-    <button
+    <div className="border bg-gray-950 rounded-2xl px-4 p-4 flex gap-6 items-center">
 
-      className={`border p-2 rounded-md bg-gray-100 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 $ h-12 w-12 flex items-center justify-center`}
-    >
-      Zoom
-    </button>
-  )
-}
+      <Button
+      variant="secondary"
+      className=" !bg-gray-950  rounded-2xl px-0 py-0"
+      >
 
-export default ZoomTools
+        <Minus />
+      </Button>
+
+      <h1 className="">100X</h1>
+
+      <Button
+      variant="secondary"
+      className=" !bg-gray-950  rounded-2xl px-0 py-0"
+      >
+       <Plus />
+      </Button>
+    </div>
+  );
+};
+
+export default ZoomTools;

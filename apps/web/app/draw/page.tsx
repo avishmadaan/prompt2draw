@@ -3,6 +3,7 @@ import ThemeSwitcher from '../../components/theme-switcher'
 import ToolBar from '../../components/toolbar'
 import PromptBar from '../../components/prompt-bar'
 import ZoomTools from '../../components/zoom-tools'
+import ColorBar from '../../components/color-bar'
 
 const DrawPage = () => {
   return (
@@ -11,9 +12,14 @@ const DrawPage = () => {
         <div className="flex w-full items-center justify-center relative" id="topbar">
        
           <ToolBar />
-        <div className="absolute right-0">
+        <div className="absolute right-0 h-full">
         <ThemeSwitcher />
         </div>
+        </div>
+
+        <div className="absolute left-4 top-1/2 -translate-y-1/2" id="colorbar">
+
+          <ColorBar />
         </div>
 
 
