@@ -4,15 +4,18 @@ import ToolBar from '../../components/toolbar'
 import PromptBar from '../../components/prompt-bar'
 import ZoomTools from '../../components/zoom-tools'
 import ColorBar from '../../components/color-bar'
+import Canvas from '../../components/canvas'
 
 const DrawPage = () => {
   return (
     <div className='p-4 relative h-screen overflow-hidden '>
 
-        <div className="flex w-full items-center justify-center relative" id="topbar">
+      <Canvas  />
+
+        <div className="flex w-full items-center justify-center absolute top-4  " id="topbar">
        
           <ToolBar />
-        <div className="absolute right-0 h-full">
+        <div className="absolute right-8 h-full">
         <ThemeSwitcher />
         </div>
         </div>
