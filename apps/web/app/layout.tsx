@@ -14,7 +14,7 @@ const geistCode = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Prompt2Draw",
+  title: "Prompt2Draw - Generate Drawings from Text Prompts",
   description: "Generate Drawings from Text Prompts",
 };
 

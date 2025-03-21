@@ -42,7 +42,7 @@ const tools : {
 
 const ToolBar = () => {
   return (
-    <div className=' border  bg-gray-950 rounded-2xl p-3    flex gap-6'>
+    <div className=' border  dark:bg-gray-950 rounded-2xl p-2    flex gap-6'>
 
       {tools.map((tool, index) => (
         <div className="aspect-square hover:bg-gray-300 hover:text-black cursor-pointer p-2 text-gray-400 rounded-xl relative hover:scale-110 duration-200" key={index}

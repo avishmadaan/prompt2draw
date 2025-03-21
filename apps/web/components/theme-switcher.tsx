@@ -11,7 +11,7 @@ const ThemeSwitcher = () => {
   return (
     <button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className={`border  bg-gray-950 rounded-xl p-4 h-full aspect-square flex justify-center items-center`}
+      className={`border  dark:bg-gray-950 rounded-xl p-4 h-full aspect-square flex justify-center items-center`}
     >
       {theme === "dark" ? <Sun size={20} /> : <Moon size={24} />}
     </button>

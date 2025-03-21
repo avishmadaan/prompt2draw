@@ -3,19 +3,20 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --background: #ffffff; /* Light background */
+  --foreground: #000000; /* Light text */
+  --border-opacity: 20%;
   --border: rgba(0, 0, 0, 0.2);
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-    --border: rgba(224, 224, 224, 0.2);
-  }
+    /* Dark Theme */
+    html.dark {
+      --background: #000000; /* Dark background */
+      --foreground: #ffffff; /* Dark text */
+      --border-opacity: 20%;
+      --border: rgba(224, 224, 224, 0.2);
+    }
 }
 
 body {

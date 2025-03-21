@@ -7,7 +7,7 @@ import ColorBar from '../../components/color-bar'
 
 const DrawPage = () => {
   return (
-    <div className='p-4 relative h-screen overflow-hidden'>
+    <div className='p-4 relative h-screen overflow-hidden '>
 
         <div className="flex w-full items-center justify-center relative" id="topbar">
        
