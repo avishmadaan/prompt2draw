@@ -1,4 +1,5 @@
-import React from 'react'
+"use client"
+import React, { useState } from 'react'
 import ThemeSwitcher from '../../components/theme-switcher'
 import ToolBar from '../../components/toolbar'
 import PromptBar from '../../components/prompt-bar'
@@ -7,14 +8,18 @@ import ColorBar from '../../components/color-bar'
 import Canvas from '../../components/canvas'
 
 const DrawPage = () => {
+
+  const [tool, setTool] = useState<string>("rect");
+  const [color, setColor] = useState<string>("red");
+
   return (
     <div className='p-4 relative h-screen overflow-hidden '>
 
-      <Canvas  />
+      <Canvas selectedTool={tool} selectedColor={color} />
 
-        <div className="flex w-full items-center justify-center absolute top-4  " id="topbar">
+        <div className="flex w-full items-center justify-center absolute top-4 z-10 " id="topbar">
        
-          <ToolBar />
+          <ToolBar  setTool={setTool} />
         <div className="absolute right-8 h-full">
         <ThemeSwitcher />
         </div>
@@ -22,7 +27,7 @@ const DrawPage = () => {
 
         <div className="absolute left-4 top-1/2 -translate-y-1/2" id="colorbar">
 
-          <ColorBar />
+          <ColorBar setColor={setColor} />
         </div>
 
 
