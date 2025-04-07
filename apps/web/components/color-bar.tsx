@@ -1,32 +1,33 @@
 import React from 'react'
+import useTools from '../hooks/useTools'
 
 const ColorBar = (
   {
-    setColor
+    className
 
   }:{
-    setColor:React.Dispatch<React.SetStateAction<string>>
+    className?:string
   }
 ) => {
+
+  const {colorSelected, setColorSelected, colors}  = useTools();
+
   return (
-    <div className='border  dark:bg-gray-950 rounded-2xl p-3 flex-col px-4  flex gap-4 py-6'>
+    <div className={` border  dark:bg-gray-950 rounded-2xl p-3 flex-col px-4  flex gap-4 py-6 ${className}`}>
 
-        <div className="rounded-full bg-red-500 h-8 w-8 cursor-pointer hover:scale-110 duration-200 hover:bg" id="color"
-        onClick={() => {
-          setColor("red");
-        }}
-        ></div>
+      {colors.map((color, index) => (
+       (
+          <div key={index} className={`rounded-full h-8 w-8 cursor-pointer hover:scale-110 duration-200  bg-${color}-500 ${colorSelected == color?"scale-125 shadow-lg":""}`}
+          onClick={() => {
+            setColorSelected(color);
+          }}
+          >
 
-        <div className="rounded-full bg-yellow-500 h-8 w-8 cursor-pointer hover:scale-110 duration-200" id="color"
-            onClick={() => {
-                  setColor("yellow");
-                }}></div>
+          </div>
+        )
+      ))}
 
-        <div className="rounded-full bg-green-500 h-8 w-8 cursor-pointer hover:scale-110 duration-200" id="color"         onClick={() => {
-          setColor("green");
-        }}></div>
-
-
+      
       
     </div>
   )

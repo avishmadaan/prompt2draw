@@ -2,9 +2,13 @@ import { Button } from "@repo/ui/button";
 import { Minus, Plus,  } from "lucide-react";
 import React from "react";
 
-const ZoomTools = () => {
+const ZoomTools = ({
+  className
+}:{
+  className?:string
+}) => {
   return (
-    <div className="border dark:bg-gray-950 rounded-2xl px-4  flex g items-center">
+    <div className= {`border dark:bg-gray-950 rounded-2xl px-4  flex g items-center  ${className} `}>
 
       <Button
       variant="secondary"

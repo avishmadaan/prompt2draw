@@ -3,6 +3,8 @@ import "@repo/ui/styles.css";
 import type { Metadata } from "next";
 import { Fira_Code, Geist } from "next/font/google";
 import { ThemeProvider } from 'next-themes'
+import { ToolContextProvider } from "../hooks/useTools";
+import { DrawContextProvider } from "../hooks/useDraw";
 
 const firaCode = Fira_Code({
   variable: "--font-fira-code",
@@ -16,6 +18,14 @@ const geistCode = Geist({
 export const metadata: Metadata = {
   title: "Prompt2Draw - Generate Drawings from Text Prompts",
   description: "Generate Drawings from Text Prompts",
+  icons: {
+    icon: [
+      {
+        url: "/favicon.png",
+        sizes: "96x96",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -26,9 +36,14 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${firaCode.variable}  ${geistCode.variable} antialiased`} >
+        <ToolContextProvider>
+          <DrawContextProvider>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         {children}
         </ThemeProvider>
+        </DrawContextProvider>
+        </ToolContextProvider>
+    
       </body>
     </html>
   );

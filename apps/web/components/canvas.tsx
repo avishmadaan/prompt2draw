@@ -1,26 +1,23 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDraw } from "../hooks/useDraw";
+import { rectHandleMouseDown, rectHandleMouseMove, rectHandleMouseUp } from "../tools/rect";
 
-const Canvas = ({
-  selectedTool,
-  selectedColor,
-}: {
-  selectedTool: string;
-  selectedColor: string;
-}) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const isDrawingRef = useRef<boolean>(false);
-  const startPosRef = useRef<{x:number, y:number} | null>(null);
-  const toolRef = useRef<string>(selectedTool);
-  const colorRef = useRef<string>(selectedColor);
+const Canvas = () => {
+
+
+  const {canvasRef, isDrawingRef, startPosRef, toolRef, colorRef} = useDraw();
+
+  const [dimensions, setDimensions] = useState({ width: 300, height: 150 }); // default fallback
 
   useEffect(() => {
-    colorRef.current = selectedColor;
-  }, [selectedColor])
+    setDimensions({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+  }, []);
 
-  useEffect(() => {
-    toolRef.current = selectedTool;
-  }, [selectedTool])
+
 
 
   useEffect(() => {
@@ -29,73 +26,30 @@ const Canvas = ({
 
     if (!canvas || !ctx) return;
 
-    ctx.fillStyle= "red";
-    ctx.fillRect(50,50,200,200);
-
-  
-
     const handleMouseDown = (event: MouseEvent) => {
-      
-      if(toolRef.current != "rect") return ;
-      
-      console.log("handleMouseDown")
-      const rect =  canvas.getBoundingClientRect()
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
 
-      startPosRef.current ={x,y};
-      isDrawingRef.current = true;
+      if(toolRef.current == "rect") {
+        rectHandleMouseDown(event, canvas, startPosRef, isDrawingRef );
+      }
 
     };
     const handleMouseMove = (event: MouseEvent) => {
 
-      console.log("mouse mvoing")
-      console.log(toolRef.current)
-      console.log(isDrawingRef.current)
-      console.log(startPosRef.current)
-
-      if(toolRef.current != "rect" || !isDrawingRef.current  || !startPosRef.current) return ;
+      if(toolRef.current == "rect" ) {
+        rectHandleMouseMove(event, canvas, ctx, startPosRef, isDrawingRef, colorRef)
+      } ;
       
-      console.log("mouseMoveEvent")
-      const rect =  canvas.getBoundingClientRect()
-      const currentX = event.clientX -rect.left;
-      const currentY = event.clientY - rect.top;
-      
-
-      const width = currentX - startPosRef.current.x;
-      const height =currentY -  startPosRef.current.y ;
-
-      console.log("cooridintates")
-      const x = startPosRef.current.x
-      const y = startPosRef.current.y
-      console.log(x);
-      console.log(y);
-
-      ctx.clearRect(0,0, canvas.width, canvas.height);
-      ctx.strokeStyle = colorRef.current;
-      ctx.strokeRect(x,y, width, height)
-
-
     };
 
     const handleMouseUp = (event: MouseEvent) => {
-      if(toolRef.current != "rect" || !isDrawingRef.current  || !startPosRef.current) return ;
 
-      const rect = canvas.getBoundingClientRect();
-      const currentX = event.clientX - rect.left;
-      const currentY = event.clientY - rect.top;
-
-      const width = currentX - startPosRef.current.x;
-      const height = currentY - startPosRef.current.y ;
-
-      ctx.fillStyle = colorRef.current;
-      ctx.fillRect(startPosRef.current.x, startPosRef.current.y, width, height);
-
+      if(toolRef.current == "rect") {
+        rectHandleMouseUp(event, canvas, ctx, startPosRef, isDrawingRef, colorRef);
+      } ;
       isDrawingRef.current = false;
       startPosRef.current = null;
 
     };
-
 
 
     canvas.addEventListener("mousedown", handleMouseDown);
@@ -110,12 +64,12 @@ const Canvas = ({
   }, []);
 
   return (
-<canvas
-  ref={canvasRef}
-  width={window.innerWidth}
-  height={window.innerHeight}
-  className="inset-0 absolute w-full h-full "
-/>
+    <canvas
+      ref={canvasRef}
+      width={dimensions.width}
+      height={dimensions.height}
+      className="inset-0 absolute w-full h-full"
+    />
   );
 };
 

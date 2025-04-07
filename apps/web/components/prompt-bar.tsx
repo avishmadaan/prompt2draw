@@ -3,7 +3,11 @@ import { Button } from '@repo/ui/button';
 import { Sparkles } from 'lucide-react'
 import React, { useState } from 'react'
 
-const PromptBar = () => {
+const PromptBar = ({
+  className
+}:{
+  className?:string
+}) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const drawWithAi = () => {
@@ -14,7 +18,7 @@ const PromptBar = () => {
     }, 5000)
   }
   return (
-    <div className="w-full max-w-md ">
+    <div className={`w-full max-w-md ${className} `}>
     <div className="relative">
 
     <input
