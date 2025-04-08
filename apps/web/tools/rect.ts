@@ -1,9 +1,12 @@
 import {
   colorRefType,
   isDrawingRefType,
+  Shape,
+  shapes,
   shiftPressedRefType,
   startPosRefType,
 } from "../hooks/useDraw";
+import { reDrawShapes } from "../utils/redraw";
 
 export const rectHandleMouseDown = (
   event: MouseEvent,
@@ -27,7 +30,8 @@ export const rectHandleMouseMove = (
   startPosRef: startPosRefType,
   isDrawingRef: isDrawingRefType,
   colorRef: colorRefType,
-  shiftPressed:shiftPressedRefType
+  shiftPressed:shiftPressedRefType,
+  shapes: Shape[] 
 ) => {
 
     
@@ -53,7 +57,9 @@ export const rectHandleMouseMove = (
   const x = startPosRef.current.x;
   const y = startPosRef.current.y;
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  //clear the canvs and preview shapes
+  reDrawShapes(ctx, canvas, shapes)
+
   ctx.strokeStyle = colorRef.current;
   ctx.strokeRect(x, y, width, height);
 };
@@ -65,7 +71,9 @@ export const rectHandleMouseUp = (
   startPosRef: startPosRefType,
   isDrawingRef: isDrawingRefType,
   colorRef: colorRefType,
-  shiftPressed:shiftPressedRefType
+  shiftPressed:shiftPressedRefType,
+  shapes: Shape[],
+  setShapes: React.Dispatch<React.SetStateAction<Shape[]>>
 ) => {
   if (!isDrawingRef.current || !startPosRef.current) return;
 
@@ -73,8 +81,10 @@ export const rectHandleMouseUp = (
   const currentX = event.clientX - rect.left;
   const currentY = event.clientY - rect.top;
 
-  let width = currentX - startPosRef.current.x;
-  let height = currentY - startPosRef.current.y;
+  const {x,y} = startPosRef.current;
+
+  let width = currentX - x;
+  let height = currentY - y;
   const maxi = Math.max(Math.abs(width), Math.abs(height));
 
 
@@ -84,6 +94,18 @@ export const rectHandleMouseUp = (
     width =  width<0?-1*maxi:maxi;
 
   } 
+
+  
+
   ctx.fillStyle = colorRef.current;
-  ctx.fillRect(startPosRef.current.x, startPosRef.current.y, width, height);
+  ctx.fillRect(x, y, width, height);
+
+  shapes.push({
+    type:"rect",
+    startX:x,
+    startY:y,
+    color:colorRef.current,
+    width:width,
+    height:height
+  })
 };

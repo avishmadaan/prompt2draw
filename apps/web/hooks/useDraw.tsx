@@ -1,7 +1,24 @@
 "use client"
 
-import { createContext, useContext, useEffect, useRef } from "react";
+import { createContext, SetStateAction, useContext, useEffect, useRef, useState } from "react";
 import useTools from "./useTools";
+
+export type Shape = {
+    type: "rect" | "circle" | "line",
+    startX:number,
+    startY:number,
+    color:string,
+    width?:number,
+    height?:number,
+    centerX?:number,
+    centerY?:number,
+    radiusX?:number,
+    radiusY?:number,
+    lastX?:number,
+    lastY?:number
+}
+
+export const shapes:Shape[] = [];
 
 type DrawContextType = {
 
@@ -11,6 +28,8 @@ type DrawContextType = {
     startPosRef: React.RefObject<{x:number, y:number} | null>
     toolRef: React.RefObject<string>
     colorRef: React.RefObject<string>
+    shapes:Shape[],
+    setShapes:React.Dispatch<SetStateAction<Shape[]>>;
 
 }
 
@@ -37,6 +56,8 @@ export const DrawContextProvider = ({children}:{children:React.ReactNode}) => {
     const toolRef = useRef<string>(toolSelected);
     const colorRef = useRef<string>(colorSelected);
 
+    const [shapes, setShapes] = useState<Shape[]>([]);
+
 
 
     useEffect(() => {
@@ -50,7 +71,7 @@ export const DrawContextProvider = ({children}:{children:React.ReactNode}) => {
 
 
     return (
-        <DrawContext.Provider value={{canvasRef, isDrawingRef,startPosRef,toolRef, colorRef, shiftPressed  }}>
+        <DrawContext.Provider value={{canvasRef, isDrawingRef,startPosRef,toolRef, colorRef, shiftPressed, shapes, setShapes  }}>
             {children}
         </DrawContext.Provider>
     )
