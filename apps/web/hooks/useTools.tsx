@@ -30,7 +30,7 @@ const tools :tool[] =  [
   {
     icon:<Minus size={32}/>,
     title:"Line",
-    name:"minus"
+    name:"line"
   
   },
   {

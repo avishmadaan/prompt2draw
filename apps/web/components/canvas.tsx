@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDraw } from "../hooks/useDraw";
 import { rectHandleMouseDown, rectHandleMouseMove, rectHandleMouseUp } from "../tools/rect";
 import { circleHandleMouseDown, circleHandleMouseMove, circleHandleMouseUp } from "../tools/circle";
+import { lineHandleMouseDown, lineHandleMouseMove, lineHandleMouseUp } from "../tools/line";
 
 const Canvas = () => {
 
@@ -38,16 +39,24 @@ const Canvas = () => {
         circleHandleMouseDown(event, canvas, startPosRef, isDrawingRef );
       }
 
+      if(toolRef.current == "line") {
+        lineHandleMouseDown(event, canvas, startPosRef, isDrawingRef );
+      }
+
     };
     const handleMouseMove = (event: MouseEvent) => {
 
       if(toolRef.current == "rect" ) {
         rectHandleMouseMove(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed)
-      } ;
+      } 
 
       if(toolRef.current == "circle" ) {
         circleHandleMouseMove(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed)
-      } ;
+      } 
+
+      if(toolRef.current == "line" ) {
+        lineHandleMouseMove(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed)
+      } 
       
     };
 
@@ -55,11 +64,14 @@ const Canvas = () => {
 
       if(toolRef.current == "rect") {
         rectHandleMouseUp(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed);
-      } ;
+      } 
 
       if(toolRef.current == "circle" ) {
         circleHandleMouseUp(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed)
-      } ;
+      } 
+      if(toolRef.current == "line" ) {
+        lineHandleMouseUp(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed)
+      }
 
 
       isDrawingRef.current = false;

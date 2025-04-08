@@ -38,23 +38,26 @@ export const circleHandleMouseMove = (
       
     if (!isDrawingRef.current || !startPosRef.current || !ctx) return;
 
-    console.log("circle moving")
   
     const rect = canvas.getBoundingClientRect();
     const currentX = event.clientX - rect.left;
     const currentY = event.clientY - rect.top;
 
+    const { x, y } = startPosRef.current;
 
-    const x = startPosRef.current.x;
-    const y = startPosRef.current.y;
+    let centerX = (currentX + x)/2;
+    let centerY = (currentY + y)/2;
 
-    const centerX = (currentX + x)/2;
-    const centerY = (currentY + y)/2;
     let radiusX = Math.abs((currentX - x)/2);
     let radiusY =  Math.abs((currentY - y)/2);
 
     if(shiftPressed.current) {
-        radiusY = radiusX
+
+    const maxRadius = Math.max(radiusX, radiusY);
+        radiusX =radiusY =maxRadius;
+
+        centerX = x + (currentX > x ? maxRadius : -maxRadius);
+        centerY = y + (currentY > y ? maxRadius : -maxRadius);
     }
 
     ctx.strokeStyle = colorRef.current;
@@ -62,7 +65,8 @@ export const circleHandleMouseMove = (
     ctx.beginPath();
     //here 2*pie means 360*
     ctx.ellipse(centerX, centerY,radiusX,radiusY,0,0, Math.PI*(2) );
-    ctx.stroke()
+    ctx.stroke();
+    ctx.closePath();
 
   };
 
@@ -82,14 +86,23 @@ export const circleHandleMouseMove = (
     const currentX = event.clientX - rect.left;
     const currentY = event.clientY - rect.top;
 
-    const x = startPosRef.current.x;
-    const y = startPosRef.current.y;
+    const { x, y } = startPosRef.current;
 
+    let centerX = (currentX + x)/2;
+    let centerY = (currentY + y)/2;
 
-    const centerX = (currentX + x)/2;
-    const centerY = (currentY + y)/2;
-    const radiusX = Math.abs((currentX - x)/2);
-    const radiusY = Math.abs((currentY - y)/2);
+    let radiusX = Math.abs((currentX - x)/2);
+    let radiusY =  Math.abs((currentY - y)/2);
+
+    if(shiftPressed.current) {
+
+    const maxRadius = Math.max(radiusX, radiusY);
+        radiusX =radiusY =maxRadius;
+
+        centerX = x + (currentX > x ? maxRadius : -maxRadius);
+        centerY = y + (currentY > y ? maxRadius : -maxRadius);
+    }
+
 
     ctx.fillStyle = colorRef.current;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -97,6 +110,7 @@ export const circleHandleMouseMove = (
     //here 2*pie means 360*
     ctx.ellipse(centerX, centerY,radiusX,radiusY,0,0, Math.PI*(2) );
     ctx.fill()
+    ctx.closePath();
   };
   
   
