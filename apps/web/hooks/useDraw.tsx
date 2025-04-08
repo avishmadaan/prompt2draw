@@ -7,6 +7,7 @@ type DrawContextType = {
 
     canvasRef:React.RefObject<HTMLCanvasElement | null>
     isDrawingRef:React.RefObject<boolean>
+    shiftPressed:React.RefObject<boolean>
     startPosRef: React.RefObject<{x:number, y:number} | null>
     toolRef: React.RefObject<string>
     colorRef: React.RefObject<string>
@@ -18,6 +19,7 @@ export type startPosRefType = React.RefObject<{
 } | null> 
 
 export type isDrawingRefType = React.RefObject<boolean>
+export type shiftPressedRefType = React.RefObject<boolean>
 export type colorRefType = React.RefObject<string>
 
 const DrawContext = createContext<DrawContextType | undefined>(undefined);
@@ -28,6 +30,7 @@ export const DrawContextProvider = ({children}:{children:React.ReactNode}) => {
 
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const isDrawingRef = useRef<boolean>(false);
+    const shiftPressed = useRef<boolean>(false);
     const startPosRef = useRef<{
         x:number, y:number
     }>(null);
@@ -47,7 +50,7 @@ export const DrawContextProvider = ({children}:{children:React.ReactNode}) => {
 
 
     return (
-        <DrawContext.Provider value={{canvasRef, isDrawingRef,startPosRef,toolRef, colorRef  }}>
+        <DrawContext.Provider value={{canvasRef, isDrawingRef,startPosRef,toolRef, colorRef, shiftPressed  }}>
             {children}
         </DrawContext.Provider>
     )

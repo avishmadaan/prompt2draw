@@ -1,6 +1,7 @@
 import {
   colorRefType,
   isDrawingRefType,
+  shiftPressedRefType,
   startPosRefType,
 } from "../hooks/useDraw";
 
@@ -25,7 +26,8 @@ export const rectHandleMouseMove = (
   ctx: CanvasRenderingContext2D,
   startPosRef: startPosRefType,
   isDrawingRef: isDrawingRefType,
-  colorRef: colorRefType
+  colorRef: colorRefType,
+  shiftPressed:shiftPressedRefType
 ) => {
 
     
@@ -35,8 +37,18 @@ export const rectHandleMouseMove = (
   const currentX = event.clientX - rect.left;
   const currentY = event.clientY - rect.top;
 
-  const width = currentX - startPosRef.current.x;
-  const height = currentY - startPosRef.current.y;
+  let width = currentX - startPosRef.current.x;
+  let height = currentY - startPosRef.current.y;
+
+  const maxi = Math.max(Math.abs(width), Math.abs(height));
+
+
+  if(shiftPressed.current) {
+
+    height =  height<0?-1*maxi:maxi;
+    width =  width<0?-1*maxi:maxi;
+
+  } 
 
   const x = startPosRef.current.x;
   const y = startPosRef.current.y;
@@ -52,7 +64,8 @@ export const rectHandleMouseUp = (
   ctx: CanvasRenderingContext2D,
   startPosRef: startPosRefType,
   isDrawingRef: isDrawingRefType,
-  colorRef: colorRefType
+  colorRef: colorRefType,
+  shiftPressed:shiftPressedRefType
 ) => {
   if (!isDrawingRef.current || !startPosRef.current) return;
 
@@ -60,9 +73,17 @@ export const rectHandleMouseUp = (
   const currentX = event.clientX - rect.left;
   const currentY = event.clientY - rect.top;
 
-  const width = currentX - startPosRef.current.x;
-  const height = currentY - startPosRef.current.y;
+  let width = currentX - startPosRef.current.x;
+  let height = currentY - startPosRef.current.y;
+  const maxi = Math.max(Math.abs(width), Math.abs(height));
 
+
+  if(shiftPressed.current) {
+
+    height =  height<0?-1*maxi:maxi;
+    width =  width<0?-1*maxi:maxi;
+
+  } 
   ctx.fillStyle = colorRef.current;
   ctx.fillRect(startPosRef.current.x, startPosRef.current.y, width, height);
 };

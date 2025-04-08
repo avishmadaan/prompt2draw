@@ -17,12 +17,17 @@ const ColorBar = (
 
       {colors.map((color, index) => (
        (
-          <div key={index} className={`rounded-full h-8 w-8 cursor-pointer hover:scale-110 duration-200  bg-${color}-500 ${colorSelected == color?"scale-125 shadow-lg":""}`}
+          <div key={index} className={`rounded-full h-8 w-8 cursor-pointer hover:scale-110 duration-200 
+             ${colorSelected == color?"scale-125 shadow-lg":""}`}
           onClick={() => {
             setColorSelected(color);
           }}
+          style={{
+            backgroundColor:color
+          }}
           >
-
+      
+          
           </div>
         )
       ))}

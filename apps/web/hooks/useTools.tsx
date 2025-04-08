@@ -61,9 +61,11 @@ const tools :tool[] =  [
   ]
 
 const colors:string[] =[
-    "red",
-    "yellow",
-    "green"
+    "#ef4444",
+    "#facc15",
+    "#22c55e",
+    "#fff",
+    "#000"
 ]
 
 
@@ -75,7 +77,7 @@ export const ToolContextProvider = ({children}:{
 }) => {
 
     const [toolSelected, setToolSelected] = useState<string>("rect");
-    const [colorSelected, setColorSelected] = useState<string>("red");
+    const [colorSelected, setColorSelected] = useState<string>("#ef4444");
 
     return (
         <ToolContext.Provider value={{toolSelected, setToolSelected, colorSelected, setColorSelected,tools, colors}}>

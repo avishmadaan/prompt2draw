@@ -1,0 +1,102 @@
+import {
+    colorRefType,
+    isDrawingRefType,
+    shiftPressedRefType,
+    startPosRefType,
+  } from "../hooks/useDraw";
+
+
+  export const circleHandleMouseDown = (
+    event: MouseEvent,
+    canvas: HTMLCanvasElement,
+    startPosRef: startPosRefType,
+    isDrawingRef: isDrawingRefType
+  ) => {
+  
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    console.log("circle down")
+  
+    startPosRef.current = { x, y };
+    isDrawingRef.current = true;
+  };
+
+
+
+export const circleHandleMouseMove = (
+    event: MouseEvent,
+    canvas: HTMLCanvasElement,
+    ctx: CanvasRenderingContext2D,
+    startPosRef: startPosRefType,
+    isDrawingRef: isDrawingRefType,
+    colorRef: colorRefType,
+    shiftPressed:shiftPressedRefType
+  ) => {
+  
+      
+    if (!isDrawingRef.current || !startPosRef.current || !ctx) return;
+
+    console.log("circle moving")
+  
+    const rect = canvas.getBoundingClientRect();
+    const currentX = event.clientX - rect.left;
+    const currentY = event.clientY - rect.top;
+
+
+    const x = startPosRef.current.x;
+    const y = startPosRef.current.y;
+
+    const centerX = (currentX + x)/2;
+    const centerY = (currentY + y)/2;
+    let radiusX = Math.abs((currentX - x)/2);
+    let radiusY =  Math.abs((currentY - y)/2);
+
+    if(shiftPressed.current) {
+        radiusY = radiusX
+    }
+
+    ctx.strokeStyle = colorRef.current;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.beginPath();
+    //here 2*pie means 360*
+    ctx.ellipse(centerX, centerY,radiusX,radiusY,0,0, Math.PI*(2) );
+    ctx.stroke()
+
+  };
+
+
+  export const circleHandleMouseUp = (
+    event: MouseEvent,
+    canvas: HTMLCanvasElement,
+    ctx: CanvasRenderingContext2D,
+    startPosRef: startPosRefType,
+    isDrawingRef: isDrawingRefType,
+    colorRef: colorRefType,
+    shiftPressed:shiftPressedRefType
+  ) => {
+    if (!isDrawingRef.current || !startPosRef.current) return;
+  
+    const rect = canvas.getBoundingClientRect();
+    const currentX = event.clientX - rect.left;
+    const currentY = event.clientY - rect.top;
+
+    const x = startPosRef.current.x;
+    const y = startPosRef.current.y;
+
+
+    const centerX = (currentX + x)/2;
+    const centerY = (currentY + y)/2;
+    const radiusX = Math.abs((currentX - x)/2);
+    const radiusY = Math.abs((currentY - y)/2);
+
+    ctx.fillStyle = colorRef.current;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.beginPath();
+    //here 2*pie means 360*
+    ctx.ellipse(centerX, centerY,radiusX,radiusY,0,0, Math.PI*(2) );
+    ctx.fill()
+  };
+  
+  
