@@ -3,18 +3,21 @@ import { Shape } from "../hooks/useDraw";
 export const reDrawShapes = (
     ctx: CanvasRenderingContext2D,
     canvas: HTMLCanvasElement,
-    shapes:Shape[]
+    shapes:Shape[],
+    zoom:number
 
 ) => {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.save();
+    ctx.scale(zoom, zoom);
 
     shapes.map((shape) => {
 
         if(shape.type == "rect") {
             ctx.fillStyle = shape.color;
             ctx.fillRect(shape.startX, shape.startY, shape.width, shape.height)
-
         }
 
         if(shape.type =="circle" ) {
@@ -37,5 +40,7 @@ export const reDrawShapes = (
 
         }
     })
+
+    ctx.restore();
 
 }

@@ -1,9 +1,11 @@
 import {
     colorRefType,
     isDrawingRefType,
+    Shape,
     shiftPressedRefType,
     startPosRefType,
   } from "../hooks/useDraw";
+import { reDrawShapes } from "../utils/redraw";
 
 
   export const circleHandleMouseDown = (
@@ -17,7 +19,6 @@ import {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
-    console.log("circle down")
   
     startPosRef.current = { x, y };
     isDrawingRef.current = true;
@@ -32,7 +33,9 @@ export const circleHandleMouseMove = (
     startPosRef: startPosRefType,
     isDrawingRef: isDrawingRefType,
     colorRef: colorRefType,
-    shiftPressed:shiftPressedRefType
+    shiftPressed:shiftPressedRefType,
+    shapes: Shape[],
+    zoom:number
   ) => {
   
       
@@ -60,8 +63,10 @@ export const circleHandleMouseMove = (
         centerY = y + (currentY > y ? maxRadius : -maxRadius);
     }
 
+    // redraw old shapes
+    reDrawShapes(ctx, canvas, shapes, zoom)
+
     ctx.strokeStyle = colorRef.current;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.beginPath();
     //here 2*pie means 360*
     ctx.ellipse(centerX, centerY,radiusX,radiusY,0,0, Math.PI*(2) );
@@ -78,9 +83,14 @@ export const circleHandleMouseMove = (
     startPosRef: startPosRefType,
     isDrawingRef: isDrawingRefType,
     colorRef: colorRefType,
-    shiftPressed:shiftPressedRefType
+    shiftPressed:shiftPressedRefType,
+    shapes: Shape[] ,
+    shapesRef: React.RefObject<Shape[]>,
+    zoom:number
   ) => {
     if (!isDrawingRef.current || !startPosRef.current) return;
+
+    console.log("circle mouse up")
   
     const rect = canvas.getBoundingClientRect();
     const currentX = event.clientX - rect.left;
@@ -104,13 +114,31 @@ export const circleHandleMouseMove = (
     }
 
 
-    ctx.fillStyle = colorRef.current;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.beginPath();
-    //here 2*pie means 360*
-    ctx.ellipse(centerX, centerY,radiusX,radiusY,0,0, Math.PI*(2) );
-    ctx.fill()
-    ctx.closePath();
+    // ctx.fillStyle = colorRef.current;
+    // ctx.beginPath();
+    // //here 2*pie means 360*
+    // ctx.ellipse(centerX, centerY,radiusX,radiusY,0,0, Math.PI*(2) );
+    // ctx.fill()
+    // ctx.closePath();
+
+    const newShapes = [...shapes, {
+        type:"circle" as const,
+        color:colorRef.current,
+        centerX,
+        centerY,
+        radiusX,
+        radiusY
+
+    }]
+    
+      shapesRef.current = newShapes;
+      
+      
+      // redraw old shapes
+      reDrawShapes(ctx, canvas, newShapes, zoom)
+
+
+
   };
   
   

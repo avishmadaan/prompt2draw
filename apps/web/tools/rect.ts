@@ -2,7 +2,6 @@ import {
   colorRefType,
   isDrawingRefType,
   Shape,
-  shapes,
   shiftPressedRefType,
   startPosRefType,
 } from "../hooks/useDraw";
@@ -31,7 +30,8 @@ export const rectHandleMouseMove = (
   isDrawingRef: isDrawingRefType,
   colorRef: colorRefType,
   shiftPressed:shiftPressedRefType,
-  shapes: Shape[] 
+  shapes: Shape[],
+  zoom:number
 ) => {
 
     
@@ -53,15 +53,17 @@ export const rectHandleMouseMove = (
     width =  width<0?-1*maxi:maxi;
 
   } 
-
+  
   const x = startPosRef.current.x;
   const y = startPosRef.current.y;
 
-  //clear the canvs and preview shapes
-  reDrawShapes(ctx, canvas, shapes)
-
+  
+  
+  //redraw old shapes
+  reDrawShapes(ctx, canvas, shapes, zoom)
   ctx.strokeStyle = colorRef.current;
   ctx.strokeRect(x, y, width, height);
+  
 };
 
 export const rectHandleMouseUp = (
@@ -72,8 +74,9 @@ export const rectHandleMouseUp = (
   isDrawingRef: isDrawingRefType,
   colorRef: colorRefType,
   shiftPressed:shiftPressedRefType,
-  shapes: Shape[],
-  setShapes: React.Dispatch<React.SetStateAction<Shape[]>>
+  shapes: Shape[] ,
+  shapesRef: React.RefObject<Shape[]>,
+  zoom:number
 ) => {
   if (!isDrawingRef.current || !startPosRef.current) return;
 
@@ -95,17 +98,19 @@ export const rectHandleMouseUp = (
 
   } 
 
-  
-
-  ctx.fillStyle = colorRef.current;
-  ctx.fillRect(x, y, width, height);
-
-  shapes.push({
-    type:"rect",
+  const newShapes = [...shapes, {
+    type:"rect" as const,
     startX:x,
     startY:y,
     color:colorRef.current,
     width:width,
     height:height
-  })
+}]
+
+  shapesRef.current = newShapes;
+
+    //redraw old shapes
+    reDrawShapes(ctx, canvas, newShapes, zoom)
+
+
 };

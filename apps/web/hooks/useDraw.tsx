@@ -3,20 +3,36 @@
 import { createContext, SetStateAction, useContext, useEffect, useRef, useState } from "react";
 import useTools from "./useTools";
 
-export type Shape = {
-    type: "rect" | "circle" | "line",
-    startX:number,
-    startY:number,
-    color:string,
-    width?:number,
-    height?:number,
-    centerX?:number,
-    centerY?:number,
-    radiusX?:number,
-    radiusY?:number,
-    lastX?:number,
-    lastY?:number
+export type RectShape = {
+    type: "rect"
+    startX:number
+    startY:number
+    color:string
+    width:number
+    height:number
 }
+
+export type CircleShape = {
+    type: "circle"
+    color:string
+    centerX:number,
+    centerY:number,
+    radiusX:number,
+    radiusY:number
+    
+}
+
+export type LineShape = {
+    type: "line"
+    color:string
+    startX:number
+    startY:number
+    lastX:number
+    lastY:number
+    
+}
+
+export type Shape = RectShape | CircleShape | LineShape
 
 export const shapes:Shape[] = [];
 
@@ -28,8 +44,8 @@ type DrawContextType = {
     startPosRef: React.RefObject<{x:number, y:number} | null>
     toolRef: React.RefObject<string>
     colorRef: React.RefObject<string>
-    shapes:Shape[],
-    setShapes:React.Dispatch<SetStateAction<Shape[]>>;
+    shapesRef:React.RefObject<Shape[]>
+    zoomRef:React.RefObject<number>;
 
 }
 
@@ -55,8 +71,8 @@ export const DrawContextProvider = ({children}:{children:React.ReactNode}) => {
     }>(null);
     const toolRef = useRef<string>(toolSelected);
     const colorRef = useRef<string>(colorSelected);
-
-    const [shapes, setShapes] = useState<Shape[]>([]);
+    const shapesRef = useRef<Shape[]>([]);
+    const zoomRef = useRef<number>(1);
 
 
 
@@ -71,7 +87,7 @@ export const DrawContextProvider = ({children}:{children:React.ReactNode}) => {
 
 
     return (
-        <DrawContext.Provider value={{canvasRef, isDrawingRef,startPosRef,toolRef, colorRef, shiftPressed, shapes, setShapes  }}>
+        <DrawContext.Provider value={{canvasRef, isDrawingRef,startPosRef,toolRef, colorRef, shiftPressed, shapesRef, zoomRef  }}>
             {children}
         </DrawContext.Provider>
     )

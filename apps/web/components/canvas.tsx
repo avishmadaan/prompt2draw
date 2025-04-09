@@ -4,11 +4,12 @@ import { useDraw } from "../hooks/useDraw";
 import { rectHandleMouseDown, rectHandleMouseMove, rectHandleMouseUp } from "../tools/rect";
 import { circleHandleMouseDown, circleHandleMouseMove, circleHandleMouseUp } from "../tools/circle";
 import { lineHandleMouseDown, lineHandleMouseMove, lineHandleMouseUp } from "../tools/line";
+import { reDrawShapes } from "../utils/redraw";
 
 const Canvas = () => {
 
 
-  const {canvasRef, isDrawingRef, startPosRef, toolRef, colorRef, shiftPressed} = useDraw();
+  const {canvasRef, isDrawingRef, startPosRef, toolRef, colorRef, shiftPressed, shapesRef, zoomRef} = useDraw();
 
   const [dimensions, setDimensions] = useState({ width: 300, height: 150 }); // default fallback
 
@@ -19,7 +20,14 @@ const Canvas = () => {
     });
   }, []);
 
-
+  // useEffect(() => {
+  //   console.log("Shapes have updated:", shapes);
+  //     //clear the canvs and preview shapes
+  //     const canvas = canvasRef.current;
+  //     const ctx = canvas?.getContext("2d");
+  //     if (!canvas || !ctx) return;
+  //   reDrawShapes(ctx, canvas, shapes)
+  // }, [shapes]);
 
 
   useEffect(() => {
@@ -47,15 +55,15 @@ const Canvas = () => {
     const handleMouseMove = (event: MouseEvent) => {
 
       if(toolRef.current == "rect" ) {
-        rectHandleMouseMove(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed)
+        rectHandleMouseMove(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed, shapesRef.current, zoomRef.current)
       } 
 
       if(toolRef.current == "circle" ) {
-        circleHandleMouseMove(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed)
+        circleHandleMouseMove(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed, shapesRef.current, zoomRef.current)
       } 
 
       if(toolRef.current == "line" ) {
-        lineHandleMouseMove(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed)
+        lineHandleMouseMove(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed, shapesRef.current, zoomRef.current)
       } 
       
     };
@@ -63,14 +71,14 @@ const Canvas = () => {
     const handleMouseUp = (event: MouseEvent) => {
 
       if(toolRef.current == "rect") {
-        rectHandleMouseUp(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed);
+        rectHandleMouseUp(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed,shapesRef.current, shapesRef,zoomRef.current);
       } 
 
       if(toolRef.current == "circle" ) {
-        circleHandleMouseUp(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed)
+        circleHandleMouseUp(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed, shapesRef.current, shapesRef, zoomRef.current)
       } 
       if(toolRef.current == "line" ) {
-        lineHandleMouseUp(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed)
+        lineHandleMouseUp(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed, shapesRef.current, shapesRef, zoomRef.current)
       }
 
 

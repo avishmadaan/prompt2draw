@@ -1,9 +1,11 @@
 import {
     colorRefType,
     isDrawingRefType,
+    Shape,
     shiftPressedRefType,
     startPosRefType,
   } from "../hooks/useDraw";
+import { reDrawShapes } from "../utils/redraw";
   
   export const lineHandleMouseDown = (
     event: MouseEvent,
@@ -27,7 +29,9 @@ import {
     startPosRef: startPosRefType,
     isDrawingRef: isDrawingRefType,
     colorRef: colorRefType,
-    shiftPressed:shiftPressedRefType
+    shiftPressed:shiftPressedRefType,
+    shapes: Shape[],
+    zoom:number
   ) => {
   
       
@@ -49,8 +53,10 @@ import {
         
     } 
   
-  
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // redraw old shapes
+    reDrawShapes(ctx, canvas, shapes, zoom)
+
+
     ctx.strokeStyle = colorRef.current;
     ctx.beginPath();
     ctx.moveTo(x,y);
@@ -67,26 +73,49 @@ import {
     startPosRef: startPosRefType,
     isDrawingRef: isDrawingRefType,
     colorRef: colorRefType,
-    shiftPressed:shiftPressedRefType
+    shiftPressed:shiftPressedRefType,
+    shapes: Shape[] ,
+    shapesRef: React.RefObject<Shape[]>,
+    zoom:number
   ) => {
-    // if (!isDrawingRef.current || !startPosRef.current) return;
+    if (!isDrawingRef.current || !startPosRef.current) return;
   
-    // const rect = canvas.getBoundingClientRect();
-    // const currentX = event.clientX - rect.left;
-    // const currentY = event.clientY - rect.top;
+    const rect = canvas.getBoundingClientRect();
+    let currentX = event.clientX - rect.left;
+    let currentY = event.clientY - rect.top;
+
+    const { x, y } = startPosRef.current;
+
+    if(shiftPressed.current) {
   
-    // let width = currentX - startPosRef.current.x;
-    // let height = currentY - startPosRef.current.y;
-    // const maxi = Math.max(Math.abs(width), Math.abs(height));
+        if(Math.abs(currentX-x)>Math.abs(currentY -y)) {
+            currentY = y;
+        } else {
+            currentX = x;
+        }
+        
+    } 
+
+
+
+    const newShapes = [...shapes, {
+        type:"line" as const,
+        color:colorRef.current,
+        startX:x,
+        startY:y,
+        lastX:currentX,
+        lastY:currentY
+    
+    }]
+    
+      shapesRef.current = newShapes;
+
+
   
+    // redraw old shapes
+    reDrawShapes(ctx, canvas, newShapes, zoom)
   
-    // if(shiftPressed.current) {
-  
-    //   height =  height<0?-1*maxi:maxi;
-    //   width =  width<0?-1*maxi:maxi;
-  
-    // } 
-    // ctx.fillStyle = colorRef.current;
-    // ctx.fillRect(startPosRef.current.x, startPosRef.current.y, width, height);
+
+
   };
   
