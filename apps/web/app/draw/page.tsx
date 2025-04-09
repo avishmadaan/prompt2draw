@@ -6,12 +6,15 @@ import PromptBar from "../../components/prompt-bar";
 import ZoomTools from "../../components/zoom-tools";
 import ColorBar from "../../components/color-bar";
 import Canvas from "../../components/canvas";
+import useTools from "../../hooks/useTools";
 
 const DrawPage = () => {
 
+  const {toolSelected} = useTools();
+
 
   return (
-    <div className="p-4 relative h-screen overflow-hidden ">
+    <div className={`p-4 relative h-screen overflow-hidden ${toolSelected == "hand"?"cursor-grabbing":""} `}>
 
       <Canvas  />
 

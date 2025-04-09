@@ -14,10 +14,14 @@ const ToolBar = ({
   const {setToolSelected, toolSelected, tools} = useTools();
 
   return (
-    <div className={` border  dark:bg-gray-950 rounded-2xl p-2  flex gap-6 ${className}`}>
+    <div className={` border  dark:bg-gray-950 rounded-2xl p-2  flex gap-5 ${className}`}>
 
       {tools.map((tool, index) => (
-        <div className={`aspect-square  cursor-pointer p-2 text-gray-400 rounded-xl relative hover:scale-110 duration-200 hover:bg-gray-300 hover:text-black ${toolSelected == tool.name?"bg-gray-300 !text-black":""} `} key={index}
+
+        <>
+        <div className={`aspect-square  cursor-pointer p-2 text-gray-400 rounded-xl relative hover:scale-110 duration-200 hover:bg-gray-200 hover:text-black ${toolSelected == tool.name?"bg-gray-200 !text-black":""} 
+
+        `} key={index}
         title={tool.title}
         onClick={() => {
           setToolSelected(tool.name);
@@ -27,6 +31,12 @@ const ToolBar = ({
 
           <p className="absolute bottom-0 right-1 text-xs text-gray-600">{index+1}</p>
         </div>
+
+        {tool.name === "rect" && (
+            <div className="border-r-2 border-gray-400 "></div> // Vertical pipe/divider
+          )}
+
+        </>
       ))}
       
     </div>

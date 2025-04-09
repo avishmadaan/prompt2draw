@@ -5,6 +5,7 @@ import { rectHandleMouseDown, rectHandleMouseMove, rectHandleMouseUp } from "../
 import { circleHandleMouseDown, circleHandleMouseMove, circleHandleMouseUp } from "../tools/circle";
 import { lineHandleMouseDown, lineHandleMouseMove, lineHandleMouseUp } from "../tools/line";
 import { reDrawShapes } from "../utils/redraw";
+import { handeHandleMouseDown, handHandleMouseMove } from "../tools/hand";
 
 const Canvas = () => {
 
@@ -51,6 +52,10 @@ const Canvas = () => {
         lineHandleMouseDown(event, canvas, startPosRef, isDrawingRef );
       }
 
+      if(toolRef.current == "hand") {
+        handeHandleMouseDown(event, canvas, startPosRef, isDrawingRef );
+      }
+
     };
     const handleMouseMove = (event: MouseEvent) => {
 
@@ -65,6 +70,12 @@ const Canvas = () => {
       if(toolRef.current == "line" ) {
         lineHandleMouseMove(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed, shapesRef.current, zoomRef.current)
       } 
+
+      if(toolRef.current == "hand" ) {
+        handHandleMouseMove(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed, shapesRef.current, zoomRef.current)
+      } 
+
+
       
     };
 
@@ -125,7 +136,7 @@ const Canvas = () => {
       ref={canvasRef}
       width={dimensions.width}
       height={dimensions.height}
-      className="inset-0 absolute w-full h-full"
+      className={`inset-0 absolute w-full h-full  border-2 !border-yellow-500 `}
     />
   );
 };

@@ -27,13 +27,21 @@ const PromptBar = ({
         className={`w-full py-4 pl-4 pr-16 border  bg-transparent rounded-2xl shadow-lg  dark:bg-gray-950 bg-white
           border-gradient-to-r from-pink-500 via-purple-600 to-indigo-700
            focus:outline-none ring-1 ${loading? "animate-pulse !ring-4":""} `}
+
+        onKeyDown={(event:any) => {
+
+          if(event.code == "Enter") {
+            drawWithAi()
+          }
+        }}
       />
       <div className="absolute inset-y-0 right-0 flex items-center pr-4">
         <Button
         variant='secondary'
        type="submit" className="text-gray-500 hover:text-gray-700 focus:outline-none !bg-transparent pl-0 pr-2 !translate-y-0 "
        loading={loading}
-        onClick={drawWithAi}>
+        onClick={drawWithAi}
+        >
           <Sparkles />
           
         </Button>

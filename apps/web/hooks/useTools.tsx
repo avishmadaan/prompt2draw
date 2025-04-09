@@ -21,12 +21,7 @@ type tool = {
 }
 
 const tools :tool[] =  [
-  {
-    icon:<Pencil size={28} className=''/>,
-    title:"Pencil",
-    name:"pencil"
-  
-  },
+
   {
     icon:<Minus size={32}/>,
     title:"Line",
@@ -76,7 +71,7 @@ export const ToolContextProvider = ({children}:{
     children:React.ReactNode
 }) => {
 
-    const [toolSelected, setToolSelected] = useState<string>("rect");
+    const [toolSelected, setToolSelected] = useState<string>("line");
     const [colorSelected, setColorSelected] = useState<string>("#ef4444");
 
     return (

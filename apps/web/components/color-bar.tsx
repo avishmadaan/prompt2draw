@@ -18,7 +18,7 @@ const ColorBar = (
       {colors.map((color, index) => (
        (
           <div key={index} className={`rounded-full h-8 w-8 cursor-pointer hover:scale-110 duration-200 
-             ${colorSelected == color?"scale-125 shadow-lg":""}`}
+             ${colorSelected == color?"scale-125 shadow-lg outline-1 outline outline-blue-500 p-4":""}`}
           onClick={() => {
             setColorSelected(color);
           }}

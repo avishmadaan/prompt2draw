@@ -113,14 +113,6 @@ export const circleHandleMouseMove = (
         centerY = y + (currentY > y ? maxRadius : -maxRadius);
     }
 
-
-    // ctx.fillStyle = colorRef.current;
-    // ctx.beginPath();
-    // //here 2*pie means 360*
-    // ctx.ellipse(centerX, centerY,radiusX,radiusY,0,0, Math.PI*(2) );
-    // ctx.fill()
-    // ctx.closePath();
-
     const newShapes = [...shapes, {
         type:"circle" as const,
         color:colorRef.current,

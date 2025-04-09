@@ -40,11 +40,11 @@ const ZoomTools = ({
     }
 
   return (
-    <div className= {`border dark:bg-gray-950 rounded-2xl px-4  flex g items-center  ${className} `}>
+    <div className= {`border dark:bg-gray-950 rounded-2xl px-4  flex gap-8 items-center  ${className} `}>
 
       <Button
       variant="secondary"
-      className=" dark:bg-gray-950  rounded-2xl px-0 py-0"
+      className=" dark:bg-gray-950  rounded-2xl !px-0 !py-0"
       onClick={handleZoomOut}
       >
 
@@ -55,7 +55,7 @@ const ZoomTools = ({
 
       <Button
       variant="secondary"
-      className=" dark:bg-gray-950  rounded-2xl px-0 py-0"
+      className=" dark:bg-gray-950  rounded-2xl !px-0 !py-0"
       onClick={handleZoomIn}
       >
        <Plus />

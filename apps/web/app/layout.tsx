@@ -5,6 +5,7 @@ import { Fira_Code, Geist } from "next/font/google";
 import { ThemeProvider } from 'next-themes'
 import { ToolContextProvider } from "../hooks/useTools";
 import { DrawContextProvider } from "../hooks/useDraw";
+import { AiContextProvider } from "../hooks/useAi";
 
 const firaCode = Fira_Code({
   variable: "--font-fira-code",
@@ -38,9 +39,11 @@ export default function RootLayout({
       <body className={`${firaCode.variable}  ${geistCode.variable} antialiased`} >
         <ToolContextProvider>
           <DrawContextProvider>
+            <AiContextProvider>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         {children}
         </ThemeProvider>
+        </AiContextProvider>
         </DrawContextProvider>
         </ToolContextProvider>
     
