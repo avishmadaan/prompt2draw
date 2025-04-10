@@ -13,6 +13,9 @@ export const rectHandleMouseDown = (
   startPosRef: startPosRefType,
   isDrawingRef: isDrawingRefType
 ) => {
+  console.log("raw")
+  console.log(event.clientX, event.clientY)
+
 
   const rect = canvas.getBoundingClientRect();
   const x = event.clientX - rect.left;
@@ -20,6 +23,7 @@ export const rectHandleMouseDown = (
 
   startPosRef.current = { x, y };
   isDrawingRef.current = true;
+  console.log(x,y);
 };
 
 export const rectHandleMouseMove = (
@@ -63,6 +67,7 @@ export const rectHandleMouseMove = (
   reDrawShapes(ctx, canvas, shapes, zoom)
   ctx.strokeStyle = colorRef.current;
   ctx.strokeRect(x, y, width, height);
+
   
 };
 
@@ -110,7 +115,22 @@ export const rectHandleMouseUp = (
   shapesRef.current = newShapes;
 
     //redraw old shapes
-    reDrawShapes(ctx, canvas, newShapes, zoom)
+  reDrawShapes(ctx, canvas, newShapes, zoom)
 
 
 };
+
+
+export const drawRect = (
+  ctx: CanvasRenderingContext2D,
+  color:string,
+  startX:number,
+  startY:number,
+  width:number,
+  height:number
+) => {
+
+  ctx.fillStyle = color;
+  ctx.fillRect(startX, startY, width, height)
+
+}

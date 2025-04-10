@@ -1,6 +1,7 @@
 import {
     colorRefType,
     isDrawingRefType,
+    offsetRefType,
     Shape,
     shiftPressedRefType,
     startPosRefType,
@@ -36,7 +37,8 @@ import { reDrawShapes } from "../utils/redraw";
     colorRef: colorRefType,
     shiftPressed:shiftPressedRefType,
     shapes: Shape[],
-    zoom:number
+    zoom:number,
+    offset:offsetRefType
   ) => {
   
       
@@ -50,10 +52,22 @@ import { reDrawShapes } from "../utils/redraw";
 
     const { x, y } = startPosRef.current;
 
-    const dx = currentX - x;
-    const dy = currentY -y;
+    const dx = (currentX - x ) *0.5;
+    const dy = (currentY -y) * 0.5;
 
-    canvas.style.transform = `translate(${dx}px, ${dy}px)`;
+    // if(offset.current?.offsetX) {
+    //     offset.current.offsetX = dx;
+    //     offset.current.offsetY = dy;
+    // }
+
+
+
+//       // Translate the canvas context
+  ctx.translate(dx, dy);
+  reDrawShapes(ctx, canvas, shapes, zoom);
+
+//   startPosRef.current = { x: currentX, y: currentY };
+    // canvas.style.transform = `translate(${dx}px, ${dy}px)`;
 
 
 

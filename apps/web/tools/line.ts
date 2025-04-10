@@ -57,13 +57,7 @@ import { reDrawShapes } from "../utils/redraw";
     reDrawShapes(ctx, canvas, shapes, zoom)
 
 
-    ctx.strokeStyle = colorRef.current;
-    ctx.beginPath();
-    ctx.moveTo(x,y);
-    ctx.lineTo(currentX, currentY)
-    ctx.lineWidth =2;
-    ctx.stroke();
-    ctx.closePath();
+    drawLine(ctx, colorRef.current, x, y, currentX, currentY);
   };
   
   export const lineHandleMouseUp = (
@@ -118,4 +112,25 @@ import { reDrawShapes } from "../utils/redraw";
 
 
   };
+
+
+  export const drawLine = (
+    ctx: CanvasRenderingContext2D,
+    color:string,
+    startX:number,
+    startY:number,
+    lastX:number, 
+    lastY:number
+  ) => {
+
+    ctx.strokeStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(startX,startY);
+    ctx.lineTo(lastX, lastY)
+    ctx.lineWidth =2;
+    ctx.stroke();
+    ctx.closePath();
+
+
+  }
   

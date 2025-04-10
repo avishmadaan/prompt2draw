@@ -1,5 +1,5 @@
 
-import React from 'react'
+import React, { Fragment } from 'react'
 import useTools from '../hooks/useTools'
 
 
@@ -18,10 +18,11 @@ const ToolBar = ({
 
       {tools.map((tool, index) => (
 
-        <>
+        <Fragment key={index}>
         <div className={`aspect-square  cursor-pointer p-2 text-gray-400 rounded-xl relative hover:scale-110 duration-200 hover:bg-gray-200 hover:text-black ${toolSelected == tool.name?"bg-gray-200 !text-black":""} 
 
-        `} key={index}
+        `} 
+    
         title={tool.title}
         onClick={() => {
           setToolSelected(tool.name);
@@ -36,7 +37,7 @@ const ToolBar = ({
             <div className="border-r-2 border-gray-400 "></div> // Vertical pipe/divider
           )}
 
-        </>
+        </Fragment>
       ))}
       
     </div>

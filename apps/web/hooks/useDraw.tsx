@@ -46,11 +46,17 @@ type DrawContextType = {
     colorRef: React.RefObject<string>
     shapesRef:React.RefObject<Shape[]>
     zoomRef:React.RefObject<number>;
+    offSet:offsetRefType
 
 }
 
 export type startPosRefType = React.RefObject<{
     x:number, y:number
+} | null> 
+
+export type offsetRefType = React.RefObject<{
+    offsetX:number,
+    offsetY:number
 } | null> 
 
 export type isDrawingRefType = React.RefObject<boolean>
@@ -73,6 +79,10 @@ export const DrawContextProvider = ({children}:{children:React.ReactNode}) => {
     const colorRef = useRef<string>(colorSelected);
     const shapesRef = useRef<Shape[]>([]);
     const zoomRef = useRef<number>(1);
+    const offSet = useRef<{
+        offsetX:number,
+        offsetY:number
+    }>(null);
 
 
 
@@ -87,7 +97,7 @@ export const DrawContextProvider = ({children}:{children:React.ReactNode}) => {
 
 
     return (
-        <DrawContext.Provider value={{canvasRef, isDrawingRef,startPosRef,toolRef, colorRef, shiftPressed, shapesRef, zoomRef  }}>
+        <DrawContext.Provider value={{canvasRef, isDrawingRef,startPosRef,toolRef, colorRef, shiftPressed, shapesRef, zoomRef, offSet }}>
             {children}
         </DrawContext.Provider>
     )

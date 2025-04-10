@@ -10,15 +10,23 @@ import { handeHandleMouseDown, handHandleMouseMove } from "../tools/hand";
 const Canvas = () => {
 
 
-  const {canvasRef, isDrawingRef, startPosRef, toolRef, colorRef, shiftPressed, shapesRef, zoomRef} = useDraw();
+  const {canvasRef, isDrawingRef, startPosRef, toolRef, colorRef, shiftPressed, shapesRef, zoomRef, offSet} = useDraw();
 
   const [dimensions, setDimensions] = useState({ width: 300, height: 150 }); // default fallback
 
   useEffect(() => {
-    setDimensions({
-      width: window.innerWidth,
-      height: window.innerHeight,
-    });
+    console.log("setting dimensions")
+    // setDimensions({
+    //   width: window.innerWidth,
+    //   height: window.innerHeight,
+    // });
+
+    const canvas = canvasRef.current;
+
+    if(canvas) {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    }
   }, []);
 
   // useEffect(() => {
@@ -72,7 +80,7 @@ const Canvas = () => {
       } 
 
       if(toolRef.current == "hand" ) {
-        handHandleMouseMove(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed, shapesRef.current, zoomRef.current)
+        handHandleMouseMove(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed, shapesRef.current, zoomRef.current, offSet)
       } 
 
 
@@ -134,8 +142,8 @@ const Canvas = () => {
   return (
     <canvas
       ref={canvasRef}
-      width={dimensions.width}
-      height={dimensions.height}
+      width={""}
+      height={""}
       className={`inset-0 absolute w-full h-full  border-2 !border-yellow-500 `}
     />
   );

@@ -132,5 +132,23 @@ export const circleHandleMouseMove = (
 
 
   };
+
+
+  export const drawCircle = (
+    ctx: CanvasRenderingContext2D,
+    color:string,
+    centerX:number,
+    centerY:number,
+    radiusX:number,
+    radiusY:number
+  ) => {
+
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.ellipse(centerX, centerY, radiusX, radiusY,0,0, Math.PI*(2) );
+    ctx.fill()
+    ctx.closePath();
+
+  }
   
   
