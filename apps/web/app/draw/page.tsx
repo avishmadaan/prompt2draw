@@ -7,6 +7,7 @@ import ZoomTools from "../../components/zoom-tools";
 import ColorBar from "../../components/color-bar";
 import Canvas from "../../components/canvas";
 import useTools from "../../hooks/useTools";
+import UndoRedo from "../../components/undoRedo";
 
 const DrawPage = () => {
 
@@ -29,7 +30,9 @@ const DrawPage = () => {
 
       <PromptBar className="absolute  bottom-4 left-1/2 -translate-x-1/2 h-16" />
 
-      <ZoomTools className="absolute ldeft-8  bottom-4  h-16" />
+      <ZoomTools className="absolute left-8  bottom-4  h-16" />
+
+      <UndoRedo className="absolute left-60  bottom-4  h-16" />
     </div>
   );
 };
