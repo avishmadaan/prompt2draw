@@ -124,9 +124,6 @@ export const DrawContextProvider = ({children}:{children:React.ReactNode}) => {
         offsetY:number
     }>(null);
 
-    const shapes = shapesRef.current;
-    const zoom = zoomRef.current;
-
 
     const drawLine = (
         color: string,

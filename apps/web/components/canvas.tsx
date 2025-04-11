@@ -5,6 +5,7 @@ import useRectTool from "../hooks/useRectTool";
 import useCircleTool from "../hooks/useCircleTool";
 import useLineTool from "../hooks/useLineTool";
 import useHandTool from "../hooks/useHandTool";
+import useSelectTool from "../hooks/useSelectTool";
 
 const Canvas = () => {
 
@@ -20,6 +21,8 @@ const Canvas = () => {
 
 
   const { handeHandleMouseDown, handHandleMouseMove } = useHandTool() || {};
+
+  const { selectHandleMouseDown, selectHandleMouseMove , selectHandleMouseUp} = useSelectTool() || {};
 
   useEffect(() => {
     console.log("setting dimensions")
@@ -52,16 +55,17 @@ const Canvas = () => {
       if(toolRef.current == "circle" && circleHandleMouseDown) {
         circleHandleMouseDown(event);
       }
-      console.log("donwn")
-      console.log(lineHandleMouseDown)
-      console.log("hello")
+
       if(toolRef.current == "line" && lineHandleMouseDown) {
-        console.log("line tool called")
+
         lineHandleMouseDown(event);
       }
 
       if(toolRef.current == "hand" && handeHandleMouseDown) {
         handeHandleMouseDown(event );
+      }
+      if(toolRef.current == "select" && selectHandleMouseDown) {
+        selectHandleMouseDown(event );
       }
 
     };
@@ -82,9 +86,9 @@ const Canvas = () => {
       if(toolRef.current == "hand" && handHandleMouseMove) {
         handHandleMouseMove(event)
       } 
-      // if(toolRef.current == "select" ) {
-      //   handHandleMouseMove(event)
-      // } 
+      if(toolRef.current == "select" && selectHandleMouseMove) {
+        selectHandleMouseMove(event)
+      } 
 
 
       
@@ -101,6 +105,9 @@ const Canvas = () => {
       } 
       if(toolRef.current == "line" && lineHandleMouseUp ) {
         lineHandleMouseUp(event)
+      }
+      if(toolRef.current == "select" && selectHandleMouseUp ) {
+        selectHandleMouseUp(event)
       }
 
 

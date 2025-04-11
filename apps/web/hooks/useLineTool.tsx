@@ -26,6 +26,12 @@ const lineHandleMouseDown = (
 const lineHandleMouseMove = (
     event: MouseEvent
   ) => {
+
+
+    if (canvasRef.current) {
+        canvasRef.current.style.cursor = "add";
+    }
+
   
       
     if (!isDrawingRef.current || !startPosRef.current ) return;

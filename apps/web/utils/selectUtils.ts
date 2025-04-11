@@ -41,8 +41,15 @@ export const getElementAtPosition =(x:number, y:number, shapes:Shape[]) => {
 
     if(type == "circle") {
 
-        const {centerX, centerY} = shape;
 
+
+        const { centerX, centerY, radiusX, radiusY } = shape;
+        // Calculate normalized distance based on the ellipse equation.
+        const ellipseValue =
+          ((x - centerX) ** 2) / (radiusX ** 2) +
+          ((y - centerY) ** 2) / (radiusY ** 2);
+        // If ellipseValue is less than or equal to 1, the point is inside the ellipse.
+        return ellipseValue <= 1;
 
     }
 
