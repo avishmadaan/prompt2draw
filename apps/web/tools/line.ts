@@ -6,6 +6,7 @@ import {
     startPosRefType,
   } from "../hooks/useDraw";
 import { reDrawShapes } from "../utils/redraw";
+import {v4 as uuidv4} from 'uuid';
   
   export const lineHandleMouseDown = (
     event: MouseEvent,
@@ -90,10 +91,12 @@ import { reDrawShapes } from "../utils/redraw";
         
     } 
 
+    const id = uuidv4();
 
 
     const newShapes = [...shapes, {
         type:"line" as const,
+        id:id,
         color:colorRef.current,
         startX:x,
         startY:y,

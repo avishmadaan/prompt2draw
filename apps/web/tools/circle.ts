@@ -6,6 +6,7 @@ import {
     startPosRefType,
   } from "../hooks/useDraw";
 import { reDrawShapes } from "../utils/redraw";
+import {v4 as uuidv4} from 'uuid';
 
 
   export const circleHandleMouseDown = (
@@ -37,33 +38,15 @@ export const circleHandleMouseMove = (
     shapes: Shape[],
     zoom:number
   ) => {
+
+    const calculations = calculateCircle(event, canvas, startPosRef, isDrawingRef, shiftPressed)
+
+    if(!calculations) return;
+
+    const {centerX, centerY, radiusX, radiusY} = calculations
   
-      
-    if (!isDrawingRef.current || !startPosRef.current || !ctx) return;
 
-  
-    const rect = canvas.getBoundingClientRect();
-    const currentX = event.clientX - rect.left;
-    const currentY = event.clientY - rect.top;
-
-    const { x, y } = startPosRef.current;
-
-    let centerX = (currentX + x)/2;
-    let centerY = (currentY + y)/2;
-
-    let radiusX = Math.abs((currentX - x)/2);
-    let radiusY =  Math.abs((currentY - y)/2);
-
-    if(shiftPressed.current) {
-
-    const maxRadius = Math.max(radiusX, radiusY);
-        radiusX =radiusY =maxRadius;
-
-        centerX = x + (currentX > x ? maxRadius : -maxRadius);
-        centerY = y + (currentY > y ? maxRadius : -maxRadius);
-    }
-
-    // redraw old shapes
+       // redraw old shapes
     reDrawShapes(ctx, canvas, shapes, zoom)
 
     ctx.strokeStyle = colorRef.current;
@@ -72,6 +55,8 @@ export const circleHandleMouseMove = (
     ctx.ellipse(centerX, centerY,radiusX,radiusY,0,0, Math.PI*(2) );
     ctx.stroke();
     ctx.closePath();
+
+ 
 
   };
 
@@ -88,33 +73,18 @@ export const circleHandleMouseMove = (
     shapesRef: React.RefObject<Shape[]>,
     zoom:number
   ) => {
-    if (!isDrawingRef.current || !startPosRef.current) return;
 
-    console.log("circle mouse up")
-  
-    const rect = canvas.getBoundingClientRect();
-    const currentX = event.clientX - rect.left;
-    const currentY = event.clientY - rect.top;
+    const calculations = calculateCircle(event, canvas, startPosRef, isDrawingRef, shiftPressed);
 
-    const { x, y } = startPosRef.current;
+    if(!calculations) return;
 
-    let centerX = (currentX + x)/2;
-    let centerY = (currentY + y)/2;
+    const {centerX, centerY, radiusX, radiusY} = calculations
 
-    let radiusX = Math.abs((currentX - x)/2);
-    let radiusY =  Math.abs((currentY - y)/2);
-
-    if(shiftPressed.current) {
-
-    const maxRadius = Math.max(radiusX, radiusY);
-        radiusX =radiusY =maxRadius;
-
-        centerX = x + (currentX > x ? maxRadius : -maxRadius);
-        centerY = y + (currentY > y ? maxRadius : -maxRadius);
-    }
+    const id = uuidv4();
 
     const newShapes = [...shapes, {
         type:"circle" as const,
+        id,
         color:colorRef.current,
         centerX,
         centerY,
@@ -151,4 +121,43 @@ export const circleHandleMouseMove = (
 
   }
   
+  export const calculateCircle = (
+    event: MouseEvent,
+    canvas: HTMLCanvasElement,
+    startPosRef: startPosRefType,
+    isDrawingRef: isDrawingRefType,
+    shiftPressed:shiftPressedRefType,
+
+  ) => {
+
+    if (!isDrawingRef.current || !startPosRef.current) return;
+
   
+    const rect = canvas.getBoundingClientRect();
+    const currentX = event.clientX - rect.left;
+    const currentY = event.clientY - rect.top;
+
+    const { x, y } = startPosRef.current;
+
+    let centerX = (currentX + x)/2;
+    let centerY = (currentY + y)/2;
+
+    let radiusX = Math.abs((currentX - x)/2);
+    let radiusY =  Math.abs((currentY - y)/2);
+
+    if(shiftPressed.current) {
+
+    const maxRadius = Math.max(radiusX, radiusY);
+        radiusX =radiusY =maxRadius;
+
+        centerX = x + (currentX > x ? maxRadius : -maxRadius);
+        centerY = y + (currentY > y ? maxRadius : -maxRadius);
+    }
+
+    return {
+      centerX, centerY, radiusX, radiusY
+    }
+
+
+
+  }

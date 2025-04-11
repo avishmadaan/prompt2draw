@@ -1,7 +1,7 @@
 "use client"
 import React, { useContext, useState } from 'react'
 import { createContext } from 'react'
-import { Circle, Eraser, Hand, Minus, Pencil, RectangleHorizontal } from 'lucide-react'
+import { Circle, Eraser, Hand, Minus, MousePointer, Pencil, Pointer, RectangleHorizontal } from 'lucide-react'
 
 type ToolContextType = {
 
@@ -37,6 +37,13 @@ const tools :tool[] =  [
     icon:<RectangleHorizontal size={32}/>,
     title:"Rectangle",
     name:"rect"
+  
+  },
+
+  {
+    icon:<MousePointer size={32}/>,
+    title:"Select",
+    name:"select"
   
   },
   

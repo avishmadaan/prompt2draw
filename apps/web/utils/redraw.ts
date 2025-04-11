@@ -1,7 +1,7 @@
-import { Shape } from "../hooks/useDraw";
+
+import { Shape } from "../contexts/draw-context";
 import { drawCircle } from "../tools/circle";
 import { drawLine } from "../tools/line";
-import { drawRect } from "../tools/rect";
 
 export const reDrawShapes = (
     ctx: CanvasRenderingContext2D,

@@ -4,8 +4,9 @@ import type { Metadata } from "next";
 import { Fira_Code, Geist } from "next/font/google";
 import { ThemeProvider } from 'next-themes'
 import { ToolContextProvider } from "../hooks/useTools";
-import { DrawContextProvider } from "../hooks/useDraw";
+
 import { AiContextProvider } from "../hooks/useAi";
+import { DrawContextProvider } from "../contexts/draw-context";
 
 const firaCode = Fira_Code({
   variable: "--font-fira-code",
