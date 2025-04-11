@@ -1,22 +1,10 @@
 import React, { useContext } from 'react'
 import { DrawContext } from '../contexts/draw-context';
 import {v4 as uuidv4} from 'uuid';
-import { reDrawShapes } from '../utils/redraw';
+import { useDraw } from './useDraw';
 
-const UseRectTool = () => {
-
-    const drawContext = useContext(DrawContext);
-
-    if(!drawContext) return;
-  
-    const {canvasRef, startPosRef,isDrawingRef, shiftPressed, shapesRef, colorRef, zoomRef} = drawContext;
-
-    const shapes = shapesRef.current;
-    const zoom = zoomRef.current;
-
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext("2d");
-    if (!canvas || !ctx) return;
+const useRectTool = () => {
+    const {canvasRef, startPosRef,isDrawingRef, shiftPressed, shapesRef, colorRef,  reDrawShapes} = useDraw();
 
 
     const rectHandleMouseDown = (
@@ -35,6 +23,11 @@ const UseRectTool = () => {
         event: MouseEvent
       ) => {
       
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
           
         if (!isDrawingRef.current || !startPosRef.current ) return;
         const currentX = event.clientX 
@@ -59,7 +52,7 @@ const UseRectTool = () => {
         
         
         //redraw old shapes
-        reDrawShapes(ctx, canvas, shapes, zoom)
+        reDrawShapes()
         ctx.strokeStyle = colorRef.current;
         ctx.strokeRect(x, y, width, height);
       
@@ -103,24 +96,12 @@ const UseRectTool = () => {
         shapesRef.current = newShapes;
       
           //redraw old shapes
-        reDrawShapes(ctx, canvas, newShapes, zoom)
+        reDrawShapes()
       
       
       };
       
-      
-    const drawRect = (
-        color:string,
-        startX:number,
-        startY:number,
-        width:number,
-        height:number
-      ) => {
-      
-        ctx.fillStyle = color;
-        ctx.fillRect(startX, startY, width, height)
-      
-      }
+
 
 
   return (
@@ -130,4 +111,4 @@ const UseRectTool = () => {
   )
 }
 
-export default UseRectTool
+export default useRectTool

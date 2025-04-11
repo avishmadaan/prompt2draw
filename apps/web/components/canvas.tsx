@@ -1,24 +1,28 @@
 "use client";
 import React, { useEffect } from "react";
 import { useDraw } from "../hooks/useDraw";
-import { circleHandleMouseDown, circleHandleMouseMove, circleHandleMouseUp } from "../tools/circle";
-import { lineHandleMouseDown, lineHandleMouseMove, lineHandleMouseUp } from "../tools/line";
-import { handeHandleMouseDown, handHandleMouseMove } from "../tools/hand";
-import UseRectTool from "../hooks/useRectTool";
+import useRectTool from "../hooks/useRectTool";
+import useCircleTool from "../hooks/useCircleTool";
+import useLineTool from "../hooks/useLineTool";
+import useHandTool from "../hooks/useHandTool";
 
 const Canvas = () => {
 
 
   const {canvasRef, isDrawingRef, startPosRef, toolRef, colorRef, shiftPressed, shapesRef, zoomRef, offSet} = useDraw();
 
-  const { rectHandleMouseDown, rectHandleMouseMove, rectHandleMouseUp} = UseRectTool() || {};
+  const { rectHandleMouseDown, rectHandleMouseMove, rectHandleMouseUp} = useRectTool() || {};
+
+  const { circleHandleMouseDown, circleHandleMouseMove, circleHandleMouseUp} = useCircleTool() || {};
+
+
+  const { lineHandleMouseDown, lineHandleMouseMove, lineHandleMouseUp } = useLineTool() || {};
+
+
+  const { handeHandleMouseDown, handHandleMouseMove } = useHandTool() || {};
 
   useEffect(() => {
     console.log("setting dimensions")
-    // setDimensions({
-    //   width: window.innerWidth,
-    //   height: window.innerHeight,
-    // });
 
     const canvas = canvasRef.current;
 
@@ -37,22 +41,27 @@ const Canvas = () => {
     if (!canvas || !ctx) return;
     canvas?.focus();
 
+    console.log(toolRef.current)
+
     const handleMouseDown = (event: MouseEvent) => {
 
       if(toolRef.current == "rect" && rectHandleMouseDown) {
         rectHandleMouseDown(event);
       }
 
-      if(toolRef.current == "circle") {
-        circleHandleMouseDown(event, canvas, startPosRef, isDrawingRef );
+      if(toolRef.current == "circle" && circleHandleMouseDown) {
+        circleHandleMouseDown(event);
+      }
+      console.log("donwn")
+      console.log(lineHandleMouseDown)
+      console.log("hello")
+      if(toolRef.current == "line" && lineHandleMouseDown) {
+        console.log("line tool called")
+        lineHandleMouseDown(event);
       }
 
-      if(toolRef.current == "line") {
-        lineHandleMouseDown(event, canvas, startPosRef, isDrawingRef );
-      }
-
-      if(toolRef.current == "hand") {
-        handeHandleMouseDown(event, canvas, startPosRef, isDrawingRef );
+      if(toolRef.current == "hand" && handeHandleMouseDown) {
+        handeHandleMouseDown(event );
       }
 
     };
@@ -62,20 +71,20 @@ const Canvas = () => {
         rectHandleMouseMove(event)
       } 
 
-      if(toolRef.current == "circle" ) {
-        circleHandleMouseMove(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed, shapesRef.current, zoomRef.current)
+      if(toolRef.current == "circle" && circleHandleMouseMove) {
+        circleHandleMouseMove(event)
       } 
 
-      if(toolRef.current == "line" ) {
-        lineHandleMouseMove(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed, shapesRef.current, zoomRef.current)
+      if(toolRef.current == "line" && lineHandleMouseMove ) {
+        lineHandleMouseMove(event)
       } 
 
-      if(toolRef.current == "hand" ) {
-        handHandleMouseMove(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed, shapesRef.current, zoomRef.current, offSet)
+      if(toolRef.current == "hand" && handHandleMouseMove) {
+        handHandleMouseMove(event)
       } 
-      if(toolRef.current == "select" ) {
-        handHandleMouseMove(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed, shapesRef.current, zoomRef.current, offSet)
-      } 
+      // if(toolRef.current == "select" ) {
+      //   handHandleMouseMove(event)
+      // } 
 
 
       
@@ -87,11 +96,11 @@ const Canvas = () => {
         rectHandleMouseUp(event);
       } 
 
-      if(toolRef.current == "circle" ) {
-        circleHandleMouseUp(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed, shapesRef.current, shapesRef, zoomRef.current)
+      if(toolRef.current == "circle"  && circleHandleMouseUp) {
+        circleHandleMouseUp(event)
       } 
-      if(toolRef.current == "line" ) {
-        lineHandleMouseUp(event, canvas, ctx, startPosRef, isDrawingRef, colorRef, shiftPressed, shapesRef.current, shapesRef, zoomRef.current)
+      if(toolRef.current == "line" && lineHandleMouseUp ) {
+        lineHandleMouseUp(event)
       }
 
 

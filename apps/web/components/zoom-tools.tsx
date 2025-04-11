@@ -2,7 +2,6 @@ import { Button } from "@repo/ui/button";
 import { Minus, Plus,  } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useDraw } from "../hooks/useDraw";
-import { reDrawShapes } from "../utils/redraw";
 
 const ZoomTools = ({
   className
@@ -10,7 +9,7 @@ const ZoomTools = ({
   className?:string
 }) => {
 
-    const {zoomRef, canvasRef, shapesRef} = useDraw();
+    const {zoomRef, canvasRef, shapesRef, reDrawShapes} = useDraw();
 
     const [zoom, setZoom] = useState<number>(1);
 
@@ -20,7 +19,7 @@ const ZoomTools = ({
       
       if (!canvas || !ctx) return;
 
-      reDrawShapes(ctx, canvas, shapesRef.current, zoomRef.current)
+      reDrawShapes()
 }
 
 

@@ -38,13 +38,17 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${firaCode.variable}  ${geistCode.variable} antialiased`} >
-        <ToolContextProvider>
-          <DrawContextProvider>
+      <ToolContextProvider>
+      <DrawContextProvider>
+
+          
             <AiContextProvider>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         {children}
         </ThemeProvider>
         </AiContextProvider>
+        
+      
         </DrawContextProvider>
         </ToolContextProvider>
     
