@@ -2,10 +2,13 @@ import React, { useContext } from 'react'
 import {v4 as uuidv4} from 'uuid';
 import { DrawContext } from '../contexts/draw-context';
 import { useDraw } from './useDraw';
+import useTools from './useTools';
 const useCircleTool = () => {
 ;
   
-    const {canvasRef, startPosRef,isDrawingRef, shiftPressed, shapesRef, colorRef, zoomRef, reDrawShapes} = useDraw();
+    const {canvasRef, startPosRef,isDrawingRef, shiftPressed, shapesRef, colorRef, zoomRef, reDrawShapes, offSet} = useDraw();
+
+    const {bgColorRef} = useTools()
 
 
 
@@ -15,12 +18,15 @@ const useCircleTool = () => {
         event: MouseEvent,
       ) => {
     
-        const x = event.clientX
-        const y = event.clientY 
-    
-      
+        const {offsetX, offsetY} = offSet.current;
+        const x = event.clientX  - offsetX;
+        const y = event.clientY - offsetY;
         startPosRef.current = { x, y };
         isDrawingRef.current = true;
+
+        if (canvasRef.current) {
+            canvasRef.current.style.cursor ="crosshair";
+        }
       };
     
     
@@ -32,7 +38,9 @@ const useCircleTool = () => {
         const canvas = canvasRef.current;
         
         const ctx = canvas?.getContext("2d");
-        if (!ctx) return;
+        if (!ctx || !canvas) return;
+
+   
     
         const calculations = calculateCircle(event)
     
@@ -43,13 +51,16 @@ const useCircleTool = () => {
     
            // redraw old shapes
         reDrawShapes()
-    
+
+        ctx.save();
+        ctx.translate(offSet.current.offsetX, offSet.current.offsetY);
         ctx.strokeStyle = colorRef.current;
         ctx.beginPath();
         //here 2*pie means 360*
         ctx.ellipse(centerX, centerY,radiusX,radiusY,0,0, Math.PI*(2) );
         ctx.stroke();
         ctx.closePath();
+        ctx.restore();
     
      
     
@@ -78,7 +89,8 @@ const useCircleTool = () => {
         const newShapes = [...shapes, {
             type:"circle" as const,
             id,
-            color:colorRef.current,
+            strokeColor:colorRef.current,
+            bgColor:bgColorRef.current,
             centerX,
             centerY,
             radiusX,
@@ -105,8 +117,11 @@ const useCircleTool = () => {
       ) => {
     
         if (!startPosRef.current) return;
-        const currentX = event.clientX;
-        const currentY = event.clientY;
+
+        const {offsetX, offsetY} = offSet.current;
+
+        const currentX = event.clientX -offsetX 
+        const currentY = event.clientY  - offsetY
     
         const { x, y } = startPosRef.current;
     

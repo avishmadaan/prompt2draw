@@ -1,7 +1,7 @@
 "use client"
-import React, { useContext, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import { createContext } from 'react'
-import { Circle, Eraser, Hand, Minus, MousePointer, Pencil, Pointer, RectangleHorizontal } from 'lucide-react'
+import { Circle, Eraser, Hand, Minus, MousePointer, RectangleHorizontal } from 'lucide-react'
 
 type tool = {
   icon:React.ReactNode,
@@ -14,10 +14,13 @@ type ToolContextType = {
 
     toolSelected:string,
     setToolSelected: React.Dispatch<React.SetStateAction<string>>,
-    colorSelected:string,
-    setColorSelected: React.Dispatch<React.SetStateAction<string>>,
+    strokeColorSelected:string,
+    setStrokeColorSelected: React.Dispatch<React.SetStateAction<string>>,
+    bgColorRef:React.RefObject<string>,
+
     tools:tool[],
-    colors:string[]
+    strokeColors:string[],
+    bgColors:string[]
 
 }
 
@@ -72,20 +75,29 @@ export const ToolContextProvider = ({children}:{
     
     ]
   
-  const colors:string[] =[
-      "#ef4444",
-      "#facc15",
-      "#22c55e",
-      "#fff",
-      "#000"
+  const strokeColors:string[] =[
+      "#D2D3D2",
+      "#FF7877",
+      "#308F41",
+      "#589AE0",
+      "#AE5901",
   ]
+
+  const bgColors:string[] =[
+
+    "#5A2C2C",
+    "#013905",
+    "#0E3F5F",
+   "#352401",
+]
   
 
     const [toolSelected, setToolSelected] = useState<string>("line");
-    const [colorSelected, setColorSelected] = useState<string>("#ef4444");
+    const [strokeColorSelected, setStrokeColorSelected] = useState<string>("#D2D3D2");
+    const bgColorRef = useRef<string>("none");
 
     return (
-        <ToolContext.Provider value={{toolSelected, setToolSelected, colorSelected, setColorSelected,tools, colors}}>
+        <ToolContext.Provider value={{toolSelected, setToolSelected, strokeColorSelected, setStrokeColorSelected,tools, strokeColors, bgColorRef, bgColors}}>
             {children}
         </ToolContext.Provider>
     )

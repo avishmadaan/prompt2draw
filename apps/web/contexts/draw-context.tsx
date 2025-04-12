@@ -2,9 +2,6 @@
 
 import { createContext, useEffect, useRef } from "react";
 import useTools from "../hooks/useTools";
-import useRectTool from "../hooks/useRectTool";
-import useCircleTool from "../hooks/useCircleTool";
-import useLineTool from "../hooks/useLineTool";
 
 
 export type RectShape = {
@@ -12,7 +9,8 @@ export type RectShape = {
     id:string
     startX:number
     startY:number
-    color:string
+    strokeColor:string
+    bgColor:string
     width:number
     height:number
 }
@@ -20,7 +18,8 @@ export type RectShape = {
 export type CircleShape = {
     type: "circle"
     id:string
-    color:string
+    strokeColor:string
+    bgColor:string
     centerX:number,
     centerY:number,
     radiusX:number,
@@ -31,7 +30,7 @@ export type CircleShape = {
 export type LineShape = {
     type: "line"
     id:string
-    color:string
+    strokeColor:string
     startX:number
     startY:number
     lastX:number
@@ -51,13 +50,16 @@ type DrawContextType = {
     startPosRef: React.RefObject<{x:number, y:number} | null>
     toolRef: React.RefObject<string>
     colorRef: React.RefObject<string>
+    bgColorRef: React.RefObject<string>
+    
     shapesRef:React.RefObject<Shape[]>
     zoomRef:React.RefObject<number>;
     offSet:offsetRefType,
     reDrawShapes:() => void,
+    scaleOffSetRef:startPosRefType,
 
     drawLine:(
-        color:string,
+        strokeColor: string,
         startX:number,
         startY:number,
         lastX:number, 
@@ -65,7 +67,8 @@ type DrawContextType = {
       ) => void;
 
     drawRect : (
-        color:string,
+        strokeColor: string,
+        bgColor:string,
         startX:number,
         startY:number,
         width:number,
@@ -73,7 +76,8 @@ type DrawContextType = {
       ) => void
 
     drawCircle : (
-        color:string,
+        strokeColor: string,
+        bgColor:string,
         centerX:number,
         centerY:number,
         radiusX:number,
@@ -92,7 +96,7 @@ export type startPosRefType = React.RefObject<{
 export type offsetRefType = React.RefObject<{
     offsetX:number,
     offsetY:number
-} | null> 
+} > 
 
 export type isDrawingRefType = React.RefObject<boolean>
 export type shiftPressedRefType = React.RefObject<boolean>
@@ -102,11 +106,8 @@ export const DrawContext = createContext<DrawContextType | undefined>(undefined)
 
 export const DrawContextProvider = ({children}:{children:React.ReactNode}) => {
 
-    const {toolSelected, colorSelected} = useTools();
+    const {toolSelected, strokeColorSelected, bgColorRef} = useTools();
 
-    // const {drawRect} = useRectTool() || {};
-    // const {drawCircle} = useCircleTool() || {};
-    // const {drawLine} = useLineTool() || {};
 
 
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -116,21 +117,27 @@ export const DrawContextProvider = ({children}:{children:React.ReactNode}) => {
         x:number, y:number
     }>(null);
     const toolRef = useRef<string>(toolSelected);
-    const colorRef = useRef<string>(colorSelected);
+    const colorRef = useRef<string>("#D2D3D2");
     const shapesRef = useRef<Shape[]>([]);
     const zoomRef = useRef<number>(1);
     const offSet = useRef<{
         offsetX:number,
         offsetY:number
-    }>(null);
+    }>({offsetX:0, offsetY:0});
+
+    const scaleOffSetRef = useRef<{
+        x:number,
+        y:number
+    }>({x:0, y:0});
 
 
     const drawLine = (
-        color: string,
+        strokeColor: string,
         startX: number,
         startY: number,
         lastX: number, 
-        lastY: number
+        lastY: number,
+        
     ) => {
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -138,17 +145,21 @@ export const DrawContextProvider = ({children}:{children:React.ReactNode}) => {
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        ctx.strokeStyle = color;
+      
+        ctx.strokeStyle = strokeColor;
         ctx.beginPath();
         ctx.moveTo(startX, startY);
         ctx.lineTo(lastX, lastY);
         ctx.lineWidth = 2;
         ctx.stroke();
         ctx.closePath();
+
+      
     };
 
     const drawRect = (
-        color: string,
+        strokeColor: string,
+        bgColor:string,
         startX: number,
         startY: number,
         width: number,
@@ -159,13 +170,24 @@ export const DrawContextProvider = ({children}:{children:React.ReactNode}) => {
         
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
+        console.log("bg")
+        console.log(bgColorRef.current)
 
-        ctx.fillStyle = color;
-        ctx.fillRect(startX, startY, width, height);
+        if(!(bgColor =="none")) {
+
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(startX, startY, width, height);
+        }
+
+
+        ctx.strokeStyle = strokeColor; // Replace with your desired stroke color.
+        ctx.lineWidth = 2; // Set to your desired line width.
+        ctx.strokeRect(startX, startY, width, height);
     };
 
     const drawCircle = (
-        color: string,
+        strokeColor: string,
+        bgColor:string,
         centerX: number,
         centerY: number,
         radiusX: number,
@@ -177,10 +199,25 @@ export const DrawContextProvider = ({children}:{children:React.ReactNode}) => {
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, Math.PI * 2);
+        console.log("bg Color");
+        console.log(bgColor);
+
+        if(!(bgColor =="none")) {
+            console.log("going sinde if")
+
+            ctx.fillStyle = bgColor;
+            ctx.beginPath();
+        //here 2*pie means 360*
+        ctx.ellipse(centerX, centerY,radiusX,radiusY,0,0, Math.PI*(2) );
         ctx.fill();
+        ctx.closePath();
+        }
+
+        ctx.strokeStyle = strokeColor;
+        ctx.beginPath();
+        //here 2*pie means 360*
+        ctx.ellipse(centerX, centerY,radiusX,radiusY,0,0, Math.PI*(2) );
+        ctx.stroke();
         ctx.closePath();
     };
 
@@ -196,17 +233,25 @@ export const DrawContextProvider = ({children}:{children:React.ReactNode}) => {
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.save();
+        
+        
+        
+        const widthChanged = scaleOffSetRef.current.x;
+        const heightChanged = scaleOffSetRef.current.Y;
+
+
+        ctx.translate(offSet.current.offsetX* zoomRef.current - widthChanged, offSet.current.offsetY* zoomRef.current - heightChanged);
         ctx.scale(zoomRef.current, zoomRef.current);
 
         shapesRef.current.forEach((shape) => {
             if (shape.type === "rect") {
-                drawRect(shape.color, shape.startX, shape.startY, shape.width, shape.height);
+                drawRect(shape.strokeColor, shape.bgColor ,shape.startX, shape.startY, shape.width, shape.height);
             }
             if (shape.type === "circle") {
-                drawCircle(shape.color, shape.centerX, shape.centerY, shape.radiusX, shape.radiusY);
+                drawCircle(shape.strokeColor, shape.bgColor, shape.centerX, shape.centerY, shape.radiusX, shape.radiusY);
             }
             if (shape.type === "line") {
-                drawLine(shape.color, shape.startX, shape.startY, shape.lastX, shape.lastY);
+                drawLine(shape.strokeColor, shape.startX, shape.startY, shape.lastX, shape.lastY);
             }
         });
 
@@ -216,8 +261,8 @@ export const DrawContextProvider = ({children}:{children:React.ReactNode}) => {
 
 
     useEffect(() => {
-        colorRef.current = colorSelected;
-      }, [colorSelected])
+        colorRef.current = strokeColorSelected;
+      }, [strokeColorSelected])
     
       useEffect(() => {
         toolRef.current = toolSelected;
@@ -226,7 +271,7 @@ export const DrawContextProvider = ({children}:{children:React.ReactNode}) => {
 
 
     return (
-        <DrawContext.Provider value={{canvasRef, isDrawingRef,startPosRef,toolRef, colorRef, shiftPressed, shapesRef, zoomRef, offSet, reDrawShapes, drawLine, drawRect, drawCircle }}>
+        <DrawContext.Provider value={{canvasRef, isDrawingRef,startPosRef,toolRef, colorRef, shiftPressed, shapesRef, zoomRef, offSet, reDrawShapes, drawLine, drawRect, drawCircle, bgColorRef, scaleOffSetRef}}>
             {children}
         </DrawContext.Provider>
     )

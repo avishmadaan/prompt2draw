@@ -5,7 +5,7 @@ import { useDraw } from './useDraw';
 const useLineTool = () => {
 
   
-    const {canvasRef, startPosRef,isDrawingRef, shiftPressed, shapesRef, colorRef, zoomRef, reDrawShapes, drawLine} = useDraw();
+    const {canvasRef, startPosRef,isDrawingRef, shiftPressed, shapesRef, colorRef, zoomRef, reDrawShapes, drawLine, offSet} = useDraw();
 
 
 
@@ -14,10 +14,9 @@ const lineHandleMouseDown = (
     event: MouseEvent,
   ) => {
 
-    console.log("line tool down")
-  
-    const x = event.clientX 
-    const y = event.clientY 
+    const {offsetX, offsetY} = offSet.current;
+    const x = event.clientX  - offsetX;
+    const y = event.clientY - offsetY;
   
     startPosRef.current = { x, y };
     isDrawingRef.current = true;
@@ -32,13 +31,19 @@ const lineHandleMouseMove = (
         canvasRef.current.style.cursor = "add";
     }
 
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext("2d");
+
   
       
-    if (!isDrawingRef.current || !startPosRef.current ) return;
-    console.log("line tool mogin")
+    if (!isDrawingRef.current || !startPosRef.current || !ctx ) return;
 
-    let currentX = event.clientX ;
-    let currentY = event.clientY ;
+    const {offsetX, offsetY} = offSet.current;
+
+    let currentX = event.clientX -offsetX;
+    let currentY = event.clientY -offsetY;
 
     const { x, y } = startPosRef.current;
 
@@ -55,10 +60,17 @@ const lineHandleMouseMove = (
     // redraw old shapes
     reDrawShapes()
 
+    ctx.save()
+    ctx.translate(offSet.current.offsetX, offSet.current.offsetY)
+    ctx.strokeStyle = colorRef.current;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(currentX, currentY);
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.closePath();
+    ctx.restore();
 
-    drawLine( colorRef.current, x, y, currentX, currentY);
-
-    console.log("after drawLine")
   };
   
 const lineHandleMouseUp = (
@@ -66,10 +78,12 @@ const lineHandleMouseUp = (
   ) => {
     if (!isDrawingRef.current || !startPosRef.current) return;
 
-    console.log("lineHandleMouseUp calling")
   
-    let currentX = event.clientX;
-    let currentY = event.clientY;
+    const {offsetX, offsetY} = offSet.current;
+
+    let currentX = event.clientX -offsetX;
+    let currentY = event.clientY -offsetY;
+
 
     const { x, y } = startPosRef.current;
 
@@ -87,13 +101,10 @@ const lineHandleMouseUp = (
 
     const shapes = shapesRef.current;
 
-
-    console.log("old shapes")
-    console.log(shapes)
     const newShapes = [...shapes, {
         type:"line" as const,
         id:id,
-        color:colorRef.current,
+        strokeColor:colorRef.current,
         startX:x,
         startY:y,
         lastX:currentX,

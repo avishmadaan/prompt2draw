@@ -1,22 +1,22 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { useDraw } from './useDraw'
 
 const useHandTool = () => {
 
-    const {canvasRef, startPosRef,isDrawingRef, shiftPressed, shapesRef, colorRef, zoomRef, reDrawShapes} = useDraw();
+    const {canvasRef, startPosRef,isDrawingRef, shiftPressed, shapesRef, colorRef, zoomRef, reDrawShapes, offSet} = useDraw();
 
+    const initialOffSetRef = useRef({
+        offsetX:0,
+        offsetY:0
+    })
 
-    const shapes = shapesRef.current;
-    const zoom = zoomRef.current;
-
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext("2d");
-    if (!canvas || !ctx) return;
 
 
     const handeHandleMouseDown = (
         event: MouseEvent,
       ) => {
+
+        initialOffSetRef.current = {...offSet.current}
       
 
         const x = event.clientX;
@@ -25,17 +25,20 @@ const useHandTool = () => {
       
         startPosRef.current = { x, y };
         isDrawingRef.current = true;
-    
-        console.log("hand down")
+
       };
     
     
     const handHandleMouseMove = (
         event: MouseEvent
       ) => {
+
+        const canvas = canvasRef.current;
+        
+        const ctx = canvas?.getContext("2d");
       
           
-        if (!isDrawingRef.current || !startPosRef.current ) return;
+        if (!isDrawingRef.current || !startPosRef.current ||!ctx) return;
     
         console.log("hand moving")
      
@@ -44,17 +47,18 @@ const useHandTool = () => {
     
         const { x, y } = startPosRef.current;
     
-        const dx = (currentX - x ) *0.5;
-        const dy = (currentY -y) * 0.5;
+        const dx = (currentX - x );
+        const dy = (currentY -y) ;
 
     //       // Translate the canvas context
-      ctx.translate(dx, dy);
+      
+        offSet.current = {
+            offsetX:dx + initialOffSetRef.current.offsetX,
+            offsetY:dy + initialOffSetRef.current.offsetY
+        }
+
       reDrawShapes();
-    
-    //   startPosRef.current = { x: currentX, y: currentY };
-        // canvas.style.transform = `translate(${dx}px, ${dy}px)`;
-    
-    
+  
     
       };
     

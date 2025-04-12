@@ -1,16 +1,21 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDraw } from "../hooks/useDraw";
 import useRectTool from "../hooks/useRectTool";
 import useCircleTool from "../hooks/useCircleTool";
 import useLineTool from "../hooks/useLineTool";
 import useHandTool from "../hooks/useHandTool";
 import useSelectTool from "../hooks/useSelectTool";
+import useErasorTool from "../hooks/useErasorTool";
+import useTools from "../hooks/useTools";
 
 const Canvas = () => {
 
 
   const {canvasRef, isDrawingRef, startPosRef, toolRef, colorRef, shiftPressed, shapesRef, zoomRef, offSet} = useDraw();
+
+
+  const {setToolSelected, toolSelected} = useTools();
 
   const { rectHandleMouseDown, rectHandleMouseMove, rectHandleMouseUp} = useRectTool() || {};
 
@@ -24,14 +29,21 @@ const Canvas = () => {
 
   const { selectHandleMouseDown, selectHandleMouseMove , selectHandleMouseUp} = useSelectTool() || {};
 
+  const { erasorHandleMouseDown, eraserHandleMouseMove} = useErasorTool() || {};
+
+
+  const previousToolRef = useRef(toolSelected);
+
   useEffect(() => {
     console.log("setting dimensions")
 
     const canvas = canvasRef.current;
 
-    if(canvas) {
+    if(canvas && canvasRef.current) {
       canvas.width = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
+
+       canvasRef.current.style.cursor= "crosshair"
     }
   }, []);
 
@@ -67,9 +79,13 @@ const Canvas = () => {
       if(toolRef.current == "select" && selectHandleMouseDown) {
         selectHandleMouseDown(event );
       }
+      if(toolRef.current == "eraser" && erasorHandleMouseDown) {
+        erasorHandleMouseDown(event );
+      }
 
     };
     const handleMouseMove = (event: MouseEvent) => {
+
 
       if(toolRef.current == "rect" && rectHandleMouseMove) {
         rectHandleMouseMove(event)
@@ -88,6 +104,9 @@ const Canvas = () => {
       } 
       if(toolRef.current == "select" && selectHandleMouseMove) {
         selectHandleMouseMove(event)
+      } 
+      if(toolRef.current == "eraser" && eraserHandleMouseMove) {
+        eraserHandleMouseMove(event)
       } 
 
 
@@ -116,18 +135,29 @@ const Canvas = () => {
 
     };
 
+
     const handleKeyDown = (event:KeyboardEvent) => {
+
       if(event.key =="Shift") {
 
         shiftPressed.current = true;
-        console.log("shift pressed")
+      }
+
+      if(event.key ==" " && !event.repeat) {
+        console.log("coming in if")
+        previousToolRef.current =toolRef.current;
+        setToolSelected("hand");
       }
     }
     
     const handleKeyUp = (event:KeyboardEvent) => {
       if(event.key =="Shift") {
         shiftPressed.current = false;
-        console.log("shift lifted")
+      }
+
+      if(event.key ==" " ) {
+        console.log("coming up")
+        setToolSelected(previousToolRef.current);
       }
     }
 
@@ -154,7 +184,7 @@ const Canvas = () => {
       ref={canvasRef}
       width={""}
       height={""}
-      className={`inset-0 absolute w-full h-full  border-2 !border-yellow-500 `}
+      className={`inset-0 absolute w-full h-full    `}
     />
   );
 };

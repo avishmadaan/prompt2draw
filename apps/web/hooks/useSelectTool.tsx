@@ -1,11 +1,11 @@
 
-import {  Shape, shapes } from '../contexts/draw-context'
+import {  Shape } from '../contexts/draw-context'
 import { getElementAtPosition } from '../utils/selectUtils';
 import { useDraw } from './useDraw';
 
 const useSelectTool = () => {
 
-  const {canvasRef, startPosRef,isDrawingRef, shiftPressed, shapesRef, colorRef, zoomRef, reDrawShapes, drawLine} = useDraw();
+  const {canvasRef, startPosRef,isDrawingRef, shiftPressed, shapesRef, colorRef, zoomRef, reDrawShapes, offSet} = useDraw();
 
   let selectedElement:Shape | undefined;
 
@@ -14,8 +14,9 @@ const useSelectTool = () => {
     event: MouseEvent,
   ) => {
 
-    const x = event.clientX ;
-    const y = event.clientY ;
+    const {offsetX, offsetY} = offSet.current;
+    const x = event.clientX  - offsetX;
+    const y = event.clientY - offsetY;
   
     startPosRef.current = { x, y };
     isDrawingRef.current = true;
@@ -30,7 +31,7 @@ const useSelectTool = () => {
 
 
     if (canvasRef.current) {
-            canvasRef.current.style.cursor = getElementAtPosition(event.clientX, event.clientY, shapesRef.current)?"move":"";
+            canvasRef.current.style.cursor = getElementAtPosition(event.clientX -offSet.current.offsetX, event.clientY -offSet.current.offsetY, shapesRef.current)?"move":"";
         }
   
 
@@ -48,11 +49,19 @@ const useSelectTool = () => {
 
 
     const {x,y} =startPosRef.current;
-    const {clientX, clientY} = event;
+    let {clientX, clientY} = event;
+
+    const {offsetX, offsetY} = offSet.current;
+
+    const currentX = event.clientX -offsetX 
+    const currentY = event.clientY  - offsetY
+
+    clientX = currentX;
+    clientY = currentY
 
     if(type == "line") {
 
-      const {lastX, lastY, startX, startY,color, id } =selectedElement;
+      const {lastX, lastY, startX, startY,strokeColor, id } =selectedElement;
 
       const offsetX = x -startX;
       const offsetY = y - startY;
@@ -71,14 +80,14 @@ const useSelectTool = () => {
           startY:newY,
           lastX:newLastX,
           lastY:newLastY,
-          color:color
+          strokeColor:strokeColor
       }
 
     }
 
     if(type == "rect") {
 
-      const {startX, startY, width, height,color, id } =selectedElement;
+      const {startX, startY, width, height,strokeColor, bgColor, id } =selectedElement;
 
       const offsetX = x -startX;
       const offsetY = y - startY;
@@ -88,7 +97,8 @@ const useSelectTool = () => {
 
       shapesRef.current[index] = {
         id,
-        color,
+        strokeColor,
+        bgColor,
         type:"rect",
         startX:newX,
         startY:newY,
@@ -99,7 +109,7 @@ const useSelectTool = () => {
 
     if(type == "circle") {
 
-      const {centerX, centerY, radiusX, radiusY,color, id } =selectedElement;
+      const {centerX, centerY, radiusX, radiusY,strokeColor, bgColor, id } =selectedElement;
 
       const offsetX = x -centerX;
       const offsetY = y - centerY;
@@ -109,7 +119,8 @@ const useSelectTool = () => {
 
       shapesRef.current[index] = {
         id,
-        color,
+        strokeColor,
+        bgColor,
         type:"circle",
         centerX:newX,
         centerY:newY,

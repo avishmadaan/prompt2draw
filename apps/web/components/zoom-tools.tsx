@@ -1,6 +1,6 @@
 import { Button } from "@repo/ui/button";
 import { Minus, Plus,  } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { useDraw } from "../hooks/useDraw";
 
 const ZoomTools = ({
@@ -9,24 +9,40 @@ const ZoomTools = ({
   className?:string
 }) => {
 
-    const {zoomRef, canvasRef, shapesRef, reDrawShapes} = useDraw();
+    const {zoomRef, canvasRef, reDrawShapes, } = useDraw();
+    const {scaleOffSetRef } = useDraw();
 
     const [zoom, setZoom] = useState<number>(1);
 
     const callRedraw = () => {
-      const canvas = canvasRef.current;
-      const ctx = canvas?.getContext("2d");
+      // const canvas = canvasRef.current;
+      // const ctx = canvas?.getContext("2d");
       
-      if (!canvas || !ctx) return;
+      // if (!canvas || !ctx) return;
 
       reDrawShapes()
 }
 
+    const handleZoomReset = () => {
+
+      zoomRef.current =1;
+      setZoom(zoomRef.current);
+      setOffSet();
+      callRedraw();
+
+      setOffSet();
+
+
+    }
+
 
     const handleZoomIn =() => {
 
-      zoomRef.current = Number(Math.min(zoomRef.current +0.1, 2).toFixed(1));
+      zoomRef.current = Number(Math.min(zoomRef.current +0.1, 4).toFixed(1));
       setZoom(zoomRef.current)
+      setOffSet();
+
+      
       callRedraw()
 
     }
@@ -34,7 +50,24 @@ const ZoomTools = ({
     const handleZoomOut = () => {
       zoomRef.current = Number(Math.max(zoomRef.current -0.1, 0.1).toFixed(1));
       setZoom(zoomRef.current)
+      setOffSet();
       callRedraw()
+
+    }
+
+    const setOffSet = () => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+
+      const widthChanged = Number((((zoomRef.current -1) * canvas.width)/2).toFixed(1));
+      const heightChanged = Number((((zoomRef.current -1) * canvas.height)/2).toFixed(1));
+
+      scaleOffSetRef.current = {
+        x:widthChanged,
+        y:heightChanged
+      }
+
+
 
     }
 
@@ -50,7 +83,7 @@ const ZoomTools = ({
         <Minus />
       </Button>
 
-      <h1 className="">{(zoom*100).toFixed(0) }%</h1>
+      <h1 className="cursor-pointer" onClick={handleZoomReset}>{(zoom*100).toFixed(0) }%</h1>
 
       <Button
       variant="secondary"

@@ -25,14 +25,14 @@ const DrawPage = () => {
 
       <ColorBar
         
-        className="absolute left-4 top-1/2 -translate-y-1/2 w-16"
+        className="absolute left-4 top-1/2 -translate-y-1/2 "
       />
 
       <PromptBar className="absolute  bottom-4 left-1/2 -translate-x-1/2 h-16" />
 
       <ZoomTools className="absolute left-8  bottom-4  h-16" />
 
-      <UndoRedo className="absolute left-60  bottom-4  h-16" />
+      {/* <UndoRedo className="absolute left-60  bottom-4  h-16" /> */}
     </div>
   );
 };
