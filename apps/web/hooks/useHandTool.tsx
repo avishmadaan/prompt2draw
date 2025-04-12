@@ -11,64 +11,42 @@ const useHandTool = () => {
         offsetY:0
     })
 
-
-
     const handeHandleMouseDown = (
         event: OurMouseEvent,
       ) => {
-
         initialOffSetRef.current = {...offSet.current}
-      
-
         const x = event.clientX;
         const y = event.clientY;
-    
-      
         startPosRef.current = { x, y };
         isDrawingRef.current = true;
-
       };
-    
     
     const handHandleMouseMove = (
         event: OurMouseEvent
       ) => {
-
         const canvas = canvasRef.current;
-        
         const ctx = canvas?.getContext("2d");
-      
-          
         if (!isDrawingRef.current || !startPosRef.current ||!ctx) return;
-    
-        console.log("hand moving")
      
         const currentX = event.clientX;
         const currentY = event.clientY;
-    
         const { x, y } = startPosRef.current;
     
-        const dx = (currentX - x );
-        const dy = (currentY -y) ;
-
-    //       // Translate the canvas context
+        // Scale the movement by the inverse of the zoom level
+        const dx = (currentX - x) / zoomRef.current;
+        const dy = (currentY - y) / zoomRef.current;
       
         offSet.current = {
-            offsetX:dx + initialOffSetRef.current.offsetX,
-            offsetY:dy + initialOffSetRef.current.offsetY
+            offsetX: dx + initialOffSetRef.current.offsetX,
+            offsetY: dy + initialOffSetRef.current.offsetY
         }
 
-      reDrawShapes();
-  
-    
+        reDrawShapes();
       };
     
-    
-      return {
+    return {
         handeHandleMouseDown, handHandleMouseMove
-    
-      }
-    
+    }
 }
 
 export default useHandTool

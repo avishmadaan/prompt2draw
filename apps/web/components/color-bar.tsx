@@ -11,7 +11,7 @@ const ColorBar = ({ className }: { className?: string }) => {
 
   return (
     <div
-      className={` border  dark:bg-gray-950 rounded-2xl p-3 flex-col px-4  flex gap-2 py-4 ${className}`}
+      className={` border bg-white  dark:bg-gray-950 rounded-2xl p-3 flex-col px-4  flex gap-2 py-4 ${className} z-50`}
     >
       <p className="text-[12px] ">Stroke</p>
       <div className="flex  gap-2 p-0" id="stroke">

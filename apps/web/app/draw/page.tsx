@@ -15,7 +15,7 @@ const DrawPage = () => {
 
 
   return (
-    <div className={`p-4 relative h-screen overflow-hidden ${toolSelected == "hand"?"cursor-grabbing":""} `}>
+    <div className={`p-4 relative h-screen overflow-hidden `}>
 
       <Canvas  />
 

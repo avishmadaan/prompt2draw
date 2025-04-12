@@ -52,9 +52,10 @@ const Canvas = () => {
 
     const {offsetX, offsetY} = offSet.current;
     const {x: scaleOffsetX,y:scaleOffsetY} = scaleOffSetRef.current;
+    const scale = zoomRef.current
 
-    const x = (event.clientX  - offsetX*zoomRef.current + scaleOffsetX)/zoomRef.current;
-    const y = (event.clientY  - offsetY*zoomRef.current + scaleOffsetY)/zoomRef.current;
+    const x = (event.clientX  - offsetX*scale + scaleOffsetX)/scale;
+    const y = (event.clientY  - offsetY*scale + scaleOffsetY)/scale;
 
     return {
       clientX:x,
@@ -85,7 +86,7 @@ const Canvas = () => {
       }
       
 
-      if(toolRef.current == "line" && lineHandleMouseDown) {
+           if(toolRef.current == "line" && lineHandleMouseDown) {
 
         lineHandleMouseDown(ourEvent);
       }

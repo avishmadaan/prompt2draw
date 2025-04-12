@@ -18,14 +18,18 @@ const ToolBar = ({
   const setCursorCross = (tool:string) => {
     if(canvasRef.current)
 
-      if(tool != "hand") {
+      if(tool == "hand") {
+        console.log("hand tool selected")
 
-        canvasRef.current.style.cursor= "crosshair"
+        canvasRef.current.style.cursor = "grabbing"
+      }
+      else {
+         canvasRef.current.style.cursor= "crosshair"
       }
   }
 
   return (
-    <div className={` border  dark:bg-gray-950 rounded-2xl p-2  flex gap-5 ${className}`}>
+    <div className={` border bg-white  dark:bg-gray-950 rounded-2xl p-2  flex gap-5 ${className} z-50`}>
 
       {tools.map((tool, index) => (
 
