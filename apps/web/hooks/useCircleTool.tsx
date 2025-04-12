@@ -1,12 +1,12 @@
 import React, { useContext } from 'react'
 import {v4 as uuidv4} from 'uuid';
-import { DrawContext } from '../contexts/draw-context';
+import { DrawContext, OurMouseEvent } from '../contexts/draw-context';
 import { useDraw } from './useDraw';
 import useTools from './useTools';
 const useCircleTool = () => {
 ;
   
-    const {canvasRef, startPosRef,isDrawingRef, shiftPressed, shapesRef, colorRef, zoomRef, reDrawShapes, offSet} = useDraw();
+    const {canvasRef, startPosRef,isDrawingRef, shiftPressed, shapesRef, colorRef, zoomRef, reDrawShapes, offSet, scaleOffSetRef} = useDraw();
 
     const {bgColorRef} = useTools()
 
@@ -15,24 +15,20 @@ const useCircleTool = () => {
 
 
     const circleHandleMouseDown = (
-        event: MouseEvent,
+        event: OurMouseEvent,
       ) => {
-    
-        const {offsetX, offsetY} = offSet.current;
-        const x = event.clientX  - offsetX;
-        const y = event.clientY - offsetY;
+
+        const x = event.clientX  
+        const y = event.clientY 
         startPosRef.current = { x, y };
         isDrawingRef.current = true;
 
-        if (canvasRef.current) {
-            canvasRef.current.style.cursor ="crosshair";
-        }
       };
     
     
     
     const circleHandleMouseMove = (
-        event: MouseEvent,
+        event: OurMouseEvent,
       ) => {
 
         const canvas = canvasRef.current;
@@ -53,7 +49,12 @@ const useCircleTool = () => {
         reDrawShapes()
 
         ctx.save();
-        ctx.translate(offSet.current.offsetX, offSet.current.offsetY);
+        const widthChanged = scaleOffSetRef.current.x;
+        const heightChanged = scaleOffSetRef.current.y;
+
+
+        ctx.translate(offSet.current.offsetX* zoomRef.current - widthChanged, offSet.current.offsetY* zoomRef.current - heightChanged);
+        ctx.scale(zoomRef.current, zoomRef.current);
         ctx.strokeStyle = colorRef.current;
         ctx.beginPath();
         //here 2*pie means 360*
@@ -68,7 +69,7 @@ const useCircleTool = () => {
     
     
     const circleHandleMouseUp = (
-        event: MouseEvent,
+        event: OurMouseEvent,
       ) => {
 
         const canvas = canvasRef.current;
@@ -112,16 +113,16 @@ const useCircleTool = () => {
 
       
     const calculateCircle = (
-        event: MouseEvent,
+        event: OurMouseEvent,
     
       ) => {
     
         if (!startPosRef.current) return;
 
-        const {offsetX, offsetY} = offSet.current;
+    
 
-        const currentX = event.clientX -offsetX 
-        const currentY = event.clientY  - offsetY
+        const currentX = event.clientX ;
+        const currentY = event.clientY ;
     
         const { x, y } = startPosRef.current;
     

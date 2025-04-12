@@ -1,5 +1,5 @@
 
-import {  Shape } from '../contexts/draw-context'
+import {  OurMouseEvent, Shape } from '../contexts/draw-context'
 import { getElementAtPosition } from '../utils/selectUtils';
 import { useDraw } from './useDraw';
 
@@ -11,12 +11,11 @@ const useSelectTool = () => {
 
 
    const selectHandleMouseDown = (
-    event: MouseEvent,
+    event: OurMouseEvent,
   ) => {
 
-    const {offsetX, offsetY} = offSet.current;
-    const x = event.clientX  - offsetX;
-    const y = event.clientY - offsetY;
+    const x = event.clientX;
+    const y = event.clientY ;
   
     startPosRef.current = { x, y };
     isDrawingRef.current = true;
@@ -27,11 +26,11 @@ const useSelectTool = () => {
 
 
   const selectHandleMouseMove = (
-    event: MouseEvent) => {
+    event: OurMouseEvent) => {
 
 
     if (canvasRef.current) {
-            canvasRef.current.style.cursor = getElementAtPosition(event.clientX -offSet.current.offsetX, event.clientY -offSet.current.offsetY, shapesRef.current)?"move":"";
+            canvasRef.current.style.cursor = getElementAtPosition(event.clientX , event.clientY , shapesRef.current)?"move":"";
         }
   
 
@@ -42,8 +41,6 @@ const useSelectTool = () => {
     const {id, type} = selectedElement;
 
 
-    console.log("selected eLEMENTS")
-    console.log(selectedElement);
     const index = shapes.findIndex((shape) => shape.id == id)
 
 
@@ -51,10 +48,9 @@ const useSelectTool = () => {
     const {x,y} =startPosRef.current;
     let {clientX, clientY} = event;
 
-    const {offsetX, offsetY} = offSet.current;
 
-    const currentX = event.clientX -offsetX 
-    const currentY = event.clientY  - offsetY
+    const currentX = event.clientX ;
+    const currentY = event.clientY;
 
     clientX = currentX;
     clientY = currentY
@@ -136,7 +132,7 @@ const useSelectTool = () => {
 
 
   const selectHandleMouseUp = (
-    event: MouseEvent) => {
+    event: OurMouseEvent) => {
 
     selectedElement = undefined;
 

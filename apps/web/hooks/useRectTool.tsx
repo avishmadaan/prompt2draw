@@ -1,22 +1,21 @@
 import React, { useContext } from 'react'
-import { DrawContext } from '../contexts/draw-context';
+import { DrawContext, OurMouseEvent } from '../contexts/draw-context';
 import {v4 as uuidv4} from 'uuid';
 import { useDraw } from './useDraw';
 import useTools from './useTools';
 
 const useRectTool = () => {
-    const {canvasRef, startPosRef,isDrawingRef, shiftPressed, shapesRef, colorRef,  reDrawShapes, offSet} = useDraw();
+    const {canvasRef, startPosRef,isDrawingRef, shiftPressed, shapesRef, colorRef,  reDrawShapes, offSet, scaleOffSetRef, zoomRef} = useDraw();
 
     const {bgColorRef} = useTools()
 
 
     const rectHandleMouseDown = (
-        event: MouseEvent,
+        event: OurMouseEvent,
       ) => {
       
-        const {offsetX, offsetY} = offSet.current;
-        const x = event.clientX  - offsetX;
-        const y = event.clientY - offsetY;
+        const x = event.clientX 
+        const y = event.clientY
       
         startPosRef.current = { x, y };
         isDrawingRef.current = true;
@@ -24,7 +23,7 @@ const useRectTool = () => {
       };
       
     const rectHandleMouseMove = (
-        event: MouseEvent
+        event: OurMouseEvent
       ) => {
       
         const canvas = canvasRef.current;
@@ -33,10 +32,10 @@ const useRectTool = () => {
         const ctx = canvas.getContext("2d");
           
         if (!isDrawingRef.current || !startPosRef.current  || !ctx) return;
-        const {offsetX, offsetY} = offSet.current;
+      
 
-        const currentX = event.clientX -offsetX 
-        const currentY = event.clientY  - offsetY
+        const currentX = event.clientX 
+        const currentY = event.clientY  
       
         let width = currentX - startPosRef.current.x;
         let height = currentY - startPosRef.current.y;
@@ -59,7 +58,12 @@ const useRectTool = () => {
         //redraw old shapes
         reDrawShapes();
         ctx.save();
-        ctx.translate(offSet.current.offsetX, offSet.current.offsetY);
+        const widthChanged = scaleOffSetRef.current.x;
+        const heightChanged = scaleOffSetRef.current.y;
+
+
+        ctx.translate(offSet.current.offsetX* zoomRef.current - widthChanged, offSet.current.offsetY* zoomRef.current - heightChanged);
+        ctx.scale(zoomRef.current, zoomRef.current);
         ctx.strokeStyle = colorRef.current;
         ctx.strokeRect(x, y, width, height);
         ctx.restore();
@@ -68,13 +72,13 @@ const useRectTool = () => {
       };
       
     const rectHandleMouseUp = (
-        event: MouseEvent,
+        event: OurMouseEvent,
       ) => {
         if (!isDrawingRef.current || !startPosRef.current) return;
-        const {offsetX, offsetY} = offSet.current;
+
       
-        const currentX = event.clientX - offsetX;
-        const currentY = event.clientY - offsetY;
+        const currentX = event.clientX
+        const currentY = event.clientY
       
         const {x,y} = startPosRef.current;
       

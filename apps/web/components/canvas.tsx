@@ -8,11 +8,12 @@ import useHandTool from "../hooks/useHandTool";
 import useSelectTool from "../hooks/useSelectTool";
 import useErasorTool from "../hooks/useErasorTool";
 import useTools from "../hooks/useTools";
+import { OurMouseEvent } from "../contexts/draw-context";
 
 const Canvas = () => {
 
 
-  const {canvasRef, isDrawingRef, startPosRef, toolRef, colorRef, shiftPressed, shapesRef, zoomRef, offSet} = useDraw();
+  const {canvasRef, isDrawingRef, startPosRef, toolRef, colorRef, shiftPressed, shapesRef, zoomRef, offSet, scaleOffSetRef} = useDraw();
 
 
   const {setToolSelected, toolSelected} = useTools();
@@ -47,6 +48,21 @@ const Canvas = () => {
     }
   }, []);
 
+  const getClientCoordinates = (event:MouseEvent) : OurMouseEvent=> {
+
+    const {offsetX, offsetY} = offSet.current;
+    const {x: scaleOffsetX,y:scaleOffsetY} = scaleOffSetRef.current;
+
+    const x = (event.clientX  - offsetX*zoomRef.current + scaleOffsetX)/zoomRef.current;
+    const y = (event.clientY  - offsetY*zoomRef.current + scaleOffsetY)/zoomRef.current;
+
+    return {
+      clientX:x,
+      clientY:y
+    }
+
+  }
+
 
 
   useEffect(() => {
@@ -59,54 +75,56 @@ const Canvas = () => {
     console.log(toolRef.current)
 
     const handleMouseDown = (event: MouseEvent) => {
-
+      const ourEvent = getClientCoordinates(event);
       if(toolRef.current == "rect" && rectHandleMouseDown) {
-        rectHandleMouseDown(event);
+        rectHandleMouseDown(ourEvent);
       }
 
       if(toolRef.current == "circle" && circleHandleMouseDown) {
-        circleHandleMouseDown(event);
+        circleHandleMouseDown(ourEvent);
       }
+      
 
       if(toolRef.current == "line" && lineHandleMouseDown) {
 
-        lineHandleMouseDown(event);
+        lineHandleMouseDown(ourEvent);
       }
 
       if(toolRef.current == "hand" && handeHandleMouseDown) {
-        handeHandleMouseDown(event );
+        handeHandleMouseDown(ourEvent );
       }
       if(toolRef.current == "select" && selectHandleMouseDown) {
-        selectHandleMouseDown(event );
+        selectHandleMouseDown(ourEvent );
       }
       if(toolRef.current == "eraser" && erasorHandleMouseDown) {
-        erasorHandleMouseDown(event );
+        erasorHandleMouseDown(ourEvent );
       }
 
     };
     const handleMouseMove = (event: MouseEvent) => {
+      const ourEvent = getClientCoordinates(event);
 
 
       if(toolRef.current == "rect" && rectHandleMouseMove) {
-        rectHandleMouseMove(event)
+        rectHandleMouseMove(ourEvent)
       } 
 
       if(toolRef.current == "circle" && circleHandleMouseMove) {
-        circleHandleMouseMove(event)
+        circleHandleMouseMove(ourEvent)
       } 
 
       if(toolRef.current == "line" && lineHandleMouseMove ) {
-        lineHandleMouseMove(event)
+        lineHandleMouseMove(ourEvent)
       } 
 
       if(toolRef.current == "hand" && handHandleMouseMove) {
-        handHandleMouseMove(event)
+        handHandleMouseMove(ourEvent)
       } 
       if(toolRef.current == "select" && selectHandleMouseMove) {
-        selectHandleMouseMove(event)
+        selectHandleMouseMove(ourEvent)
       } 
       if(toolRef.current == "eraser" && eraserHandleMouseMove) {
-        eraserHandleMouseMove(event)
+        eraserHandleMouseMove(ourEvent)
       } 
 
 
@@ -115,18 +133,20 @@ const Canvas = () => {
 
     const handleMouseUp = (event: MouseEvent) => {
 
+      const ourEvent = getClientCoordinates(event);
+
       if(toolRef.current == "rect" && rectHandleMouseUp ) {
-        rectHandleMouseUp(event);
+        rectHandleMouseUp(ourEvent);
       } 
 
       if(toolRef.current == "circle"  && circleHandleMouseUp) {
-        circleHandleMouseUp(event)
+        circleHandleMouseUp(ourEvent)
       } 
       if(toolRef.current == "line" && lineHandleMouseUp ) {
-        lineHandleMouseUp(event)
+        lineHandleMouseUp(ourEvent)
       }
       if(toolRef.current == "select" && selectHandleMouseUp ) {
-        selectHandleMouseUp(event)
+        selectHandleMouseUp(ourEvent)
       }
 
 

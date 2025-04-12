@@ -38,6 +38,11 @@ export type LineShape = {
     
 }
 
+export type OurMouseEvent = {
+    clientX:number,
+    clientY:number
+}
+
 export type Shape = RectShape | CircleShape | LineShape
 
 
@@ -56,7 +61,7 @@ type DrawContextType = {
     zoomRef:React.RefObject<number>;
     offSet:offsetRefType,
     reDrawShapes:() => void,
-    scaleOffSetRef:startPosRefType,
+    scaleOffSetRef:scaleOffSetType,
 
     drawLine:(
         strokeColor: string,
@@ -92,6 +97,10 @@ type DrawContextType = {
 export type startPosRefType = React.RefObject<{
     x:number, y:number
 } | null> 
+
+export type scaleOffSetType = React.RefObject<{
+    x:number, y:number
+} > 
 
 export type offsetRefType = React.RefObject<{
     offsetX:number,
@@ -199,11 +208,8 @@ export const DrawContextProvider = ({children}:{children:React.ReactNode}) => {
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        console.log("bg Color");
-        console.log(bgColor);
 
         if(!(bgColor =="none")) {
-            console.log("going sinde if")
 
             ctx.fillStyle = bgColor;
             ctx.beginPath();
@@ -228,16 +234,14 @@ export const DrawContextProvider = ({children}:{children:React.ReactNode}) => {
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        console.log("shapes")
-        console.log(shapesRef.current)
+
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.save();
         
-        
-        
+    
         const widthChanged = scaleOffSetRef.current.x;
-        const heightChanged = scaleOffSetRef.current.Y;
+        const heightChanged = scaleOffSetRef.current.y;
 
 
         ctx.translate(offSet.current.offsetX* zoomRef.current - widthChanged, offSet.current.offsetY* zoomRef.current - heightChanged);

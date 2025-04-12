@@ -1,18 +1,18 @@
 import React from 'react'
 import { useDraw } from './useDraw';
 import { getElementAtPosition } from '../utils/selectUtils';
+import { OurMouseEvent } from '../contexts/draw-context';
 
 const useErasorTool = () => {
 
     const {canvasRef, startPosRef,isDrawingRef, shiftPressed, shapesRef, colorRef, zoomRef, reDrawShapes, offSet} = useDraw();
 
     const erasorHandleMouseDown = (
-        event: MouseEvent,
+        event: OurMouseEvent,
       ) => {
-    
-        const {offsetX, offsetY} = offSet.current;
-        const x = event.clientX  - offsetX;
-        const y = event.clientY - offsetY;
+
+        const x = event.clientX 
+        const y = event.clientY 
       
         startPosRef.current = { x, y };
         isDrawingRef.current = true;
@@ -35,11 +35,11 @@ const useErasorTool = () => {
 
 
       const eraserHandleMouseMove = (
-        event: MouseEvent,
+        event: OurMouseEvent,
       ) => {
 
         if (canvasRef.current) {
-            canvasRef.current.style.cursor = getElementAtPosition(event.clientX -offSet.current.offsetX, event.clientY -offSet.current.offsetY, shapesRef.current)?"crosshair":"";
+            canvasRef.current.style.cursor = getElementAtPosition(event.clientX , event.clientY , shapesRef.current)?"crosshair":"";
         }
 
       }

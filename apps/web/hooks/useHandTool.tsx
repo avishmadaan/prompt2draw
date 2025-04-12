@@ -1,5 +1,6 @@
 import React, { useRef } from 'react'
 import { useDraw } from './useDraw'
+import { OurMouseEvent } from '../contexts/draw-context';
 
 const useHandTool = () => {
 
@@ -13,7 +14,7 @@ const useHandTool = () => {
 
 
     const handeHandleMouseDown = (
-        event: MouseEvent,
+        event: OurMouseEvent,
       ) => {
 
         initialOffSetRef.current = {...offSet.current}
@@ -30,7 +31,7 @@ const useHandTool = () => {
     
     
     const handHandleMouseMove = (
-        event: MouseEvent
+        event: OurMouseEvent
       ) => {
 
         const canvas = canvasRef.current;
