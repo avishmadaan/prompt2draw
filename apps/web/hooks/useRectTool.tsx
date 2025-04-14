@@ -5,7 +5,7 @@ import { useDraw } from './useDraw';
 import useTools from './useTools';
 
 const useRectTool = () => {
-    const {canvasRef, startPosRef,isDrawingRef, shiftPressed, shapesRef, colorRef,  reDrawShapes, offSet, scaleOffSetRef, zoomRef} = useDraw();
+    const {canvasRef, startPosRef,isDrawingRef, shiftPressed, shapesRef, colorRef,  reDrawShapes, offSet, scaleOffSetRef, zoomRef, drawRect} = useDraw();
 
     const {bgColorRef} = useTools()
 
@@ -57,16 +57,7 @@ const useRectTool = () => {
         
         //redraw old shapes
         reDrawShapes();
-        ctx.save();
-        const widthChanged = scaleOffSetRef.current.x;
-        const heightChanged = scaleOffSetRef.current.y;
-
-
-        ctx.translate(offSet.current.offsetX* zoomRef.current - widthChanged, offSet.current.offsetY* zoomRef.current - heightChanged);
-        ctx.scale(zoomRef.current, zoomRef.current);
-        ctx.strokeStyle = colorRef.current;
-        ctx.strokeRect(x, y, width, height);
-        ctx.restore();
+        drawRect(colorRef.current, bgColorRef.current, x,y, width, height);
       
         
       };

@@ -6,7 +6,7 @@ import useTools from './useTools';
 const useCircleTool = () => {
 ;
   
-    const {canvasRef, startPosRef,isDrawingRef, shiftPressed, shapesRef, colorRef, zoomRef, reDrawShapes, offSet, scaleOffSetRef} = useDraw();
+    const {canvasRef, startPosRef,isDrawingRef, shiftPressed, shapesRef, colorRef, zoomRef, reDrawShapes, offSet, scaleOffSetRef, drawCircle} = useDraw();
 
     const {bgColorRef} = useTools()
 
@@ -48,20 +48,7 @@ const useCircleTool = () => {
            // redraw old shapes
         reDrawShapes()
 
-        ctx.save();
-        const widthChanged = scaleOffSetRef.current.x;
-        const heightChanged = scaleOffSetRef.current.y;
-
-
-        ctx.translate(offSet.current.offsetX* zoomRef.current - widthChanged, offSet.current.offsetY* zoomRef.current - heightChanged);
-        ctx.scale(zoomRef.current, zoomRef.current);
-        ctx.strokeStyle = colorRef.current;
-        ctx.beginPath();
-        //here 2*pie means 360*
-        ctx.ellipse(centerX, centerY,radiusX,radiusY,0,0, Math.PI*(2) );
-        ctx.stroke();
-        ctx.closePath();
-        ctx.restore();
+        drawCircle(colorRef.current, bgColorRef.current, centerX, centerY, radiusX, radiusY);
     
      
     

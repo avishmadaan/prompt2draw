@@ -15,6 +15,7 @@ const useLineTool = () => {
     drawLine,
     offSet,
     scaleOffSetRef,
+    
   } = useDraw();
 
   const lineHandleMouseDown = (event: OurMouseEvent) => {
@@ -53,23 +54,7 @@ const useLineTool = () => {
     // redraw old shapes
     reDrawShapes();
 
-    ctx.save();
-    const widthChanged = scaleOffSetRef.current.x;
-    const heightChanged = scaleOffSetRef.current.y;
-
-    ctx.translate(
-      offSet.current.offsetX * zoomRef.current - widthChanged,
-      offSet.current.offsetY * zoomRef.current - heightChanged
-    );
-    ctx.scale(zoomRef.current, zoomRef.current);
-    ctx.strokeStyle = colorRef.current;
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-    ctx.lineTo(currentX, currentY);
-    ctx.lineWidth = 2;
-    ctx.stroke();
-    ctx.closePath();
-    ctx.restore();
+    drawLine(colorRef.current, x, y, currentX, currentY)
   };
 
   const lineHandleMouseUp = (event: OurMouseEvent) => {
