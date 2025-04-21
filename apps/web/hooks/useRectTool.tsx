@@ -88,16 +88,19 @@ const useRectTool = () => {
         const id = uuidv4();
 
       
-        const newShapes = [...shapesRef.current, {
-          type:"rect" as const,
-          id,
-          startX:x ,
-          startY:y ,
-          strokeColor:colorRef.current,
-          bgColor:bgColorRef.current,
-          width:width,
-          height:height
-      }]
+        const newShapes = [
+          ...shapesRef.current,
+          {
+            type: "rect" as const,
+            id,
+            x1: x,             // initial mouse-down X
+            y1: y,             // initial mouse-down Y
+            x2: currentX,      // final mouse-up X
+            y2: currentY,      // final mouse-up Y
+            strokeColor: colorRef.current,
+            bgColor: bgColorRef.current
+          }
+        ];
       
         shapesRef.current = newShapes;
       

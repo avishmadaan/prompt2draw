@@ -65,26 +65,27 @@ const useCircleTool = () => {
         if (!ctx) return;
     
     
-        const calculations = calculateCircle(event);
+        // const calculations = calculateCircle(event);
     
-        if(!calculations) return;
+        if(!startPosRef.current) return;
+        const {x, y} =startPosRef.current;
+        const {clientX, clientY} = event;
     
-        const {centerX, centerY, radiusX, radiusY} = calculations
+        // const {centerX, centerY, radiusX, radiusY} = calculations
     
         const id = uuidv4();
         const shapes = shapesRef.current;
     
         const newShapes = [...shapes, {
-            type:"circle" as const,
+            type: "circle" as const,
             id,
-            strokeColor:colorRef.current,
-            bgColor:bgColorRef.current,
-            centerX,
-            centerY,
-            radiusX,
-            radiusY
-    
-        }]
+            x1: x,       // the initial mouse-down X
+            y1: y,       // the initial mouse-down Y
+            x2: clientX,     // the final mouse-up X
+            y2: clientY,     // the final mouse-up Y
+            strokeColor: colorRef.current,
+            bgColor: bgColorRef.current
+          }]
         
           shapesRef.current = newShapes;
           

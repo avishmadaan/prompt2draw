@@ -11,26 +11,26 @@ export const getElementAtPosition =(x:number, y:number, shapes:Shape[]) => {
  export const iSWithinElement = (x:number, y:number, shape:Shape) => {
 
     const {type} = shape;
+    const {x1, y1, x2, y2} = shape;
 
     if(type == "rect") {
 
-        const {startX, startY, width, height} = shape;
 
-        const minX = Math.min(startX, startX +width);
-        const minY = Math.min(startY, startY +height);
-        const maxX = Math.max(startX, startX +width);
-        const maxY = Math.max(startY, startY +height);
+        // const minX = Math.min(startX, startX +width);
+        // const minY = Math.min(startY, startY +height);
+        // const maxX = Math.max(startX, startX +width);
+        // const maxY = Math.max(startY, startY +height);
 
-        return x >= minX && x<= maxX && y>= minY && y<=maxY;
+        return x >= x1 && x<= x2 && y>= y1 && y<=y2;
 
     }
 
     if(type == "line") {
 
-        const {startX, startY, lastX, lastY} = shape;
+   
 
-        const a = {x:startX, y:startY};
-        const b = {x:lastX, y:lastY};
+        const a = {x:x1, y:y1};
+        const b = {x:x2, y:y2};
         const c = {x,y};
 
         const offSet = distance(a,b) - distance(a,c) - distance(b,c);
@@ -41,18 +41,24 @@ export const getElementAtPosition =(x:number, y:number, shapes:Shape[]) => {
 
     if(type == "circle") {
 
+  // 1) Compute center point
+  const centerX = (x1 + x2) / 2;
+  const centerY = (y1 + y2) / 2;
+
+  // 2) Compute radii
+  const radiusX = Math.abs(x2 - x1) / 2;
+  const radiusY = Math.abs(y2 - y1) / 2;
 
 
-        const { centerX, centerY, radiusX, radiusY } = shape;
-        // Calculate normalized distance based on the ellipse equation.
-        const ellipseValue =
-          ((x - centerX) ** 2) / (radiusX ** 2) +
-          ((y - centerY) ** 2) / (radiusY ** 2);
-        // If ellipseValue is less than or equal to 1, the point is inside the ellipse.
-        return ellipseValue <= 1;
+
+     // 3) Precise ellipse check
+     const dx = x - centerX;
+     const dy = y - centerY;
+     return (dx * dx) / (radiusX * radiusX) + (dy * dy) / (radiusY * radiusY) <= 1
+
 
     }
-
+;
 
   }
 
@@ -64,3 +70,17 @@ export const getElementAtPosition =(x:number, y:number, shapes:Shape[]) => {
     return Math.sqrt(Math.pow(a.x -b.x, 2) + Math.pow(a.y - b.y, 2));
 
   }
+
+
+
+//   type Handle = "nw" | "n" | "ne" | "e" | "se" | "s" | "sw" | "w";
+
+//   export function getHandleAtPosition(
+//     x:number,
+//     y:number,
+//     shape:Shape
+
+//   ): Handle | null {
+
+
+//   }

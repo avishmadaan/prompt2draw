@@ -57,72 +57,80 @@ const useSelectTool = () => {
 
     if(type == "line") {
 
-      const {lastX, lastY, startX, startY,strokeColor, id } =selectedElement;
+      const {x1,y1,x2,y2,strokeColor, id } =selectedElement;
 
-      const offsetX = x -startX;
-      const offsetY = y - startY;
+      const offsetX = x -x1;
+      const offsetY = y - y1;
       
       const newX = clientX -offsetX;
       const newY = clientY -offsetY;
       
-      const newLastX = newX + lastX - startX;
-      const newLastY = newY + lastY - startY;
+      const newLastX = newX + x2 - x1;
+      const newLastY = newY + y2 - y1;
 
 
       shapesRef.current[index] = {
           id,
           type:"line",
-          startX:newX,
-          startY:newY,
-          lastX:newLastX,
-          lastY:newLastY,
-          strokeColor:strokeColor
+          x1:newX,
+          y1:newY,
+          x2:newLastX,
+          y2:newLastY,
+          strokeColor:strokeColor,
+          bgColor:"null"
       }
 
     }
 
     if(type == "rect") {
-
-      const {startX, startY, width, height,strokeColor, bgColor, id } =selectedElement;
-
-      const offsetX = x -startX;
-      const offsetY = y - startY;
-      
-      const newX = clientX -offsetX;
-      const newY = clientY -offsetY;
-
+      const { x1, y1, x2, y2, strokeColor, bgColor, id } = selectedElement;
+      const offsetX = x - x1;
+      const offsetY = y - y1;
+      const newX = clientX - offsetX;
+      const newY = clientY - offsetY;
+      const newX2 = newX + (x2 - x1);
+      const newY2 = newY + (y2 - y1);
       shapesRef.current[index] = {
         id,
         strokeColor,
         bgColor,
-        type:"rect",
-        startX:newX,
-        startY:newY,
-        width,
-        height
-    }
+        type: "rect",
+        x1: newX,
+        y1: newY,
+        x2: newX2,
+        y2: newY2,
+      };
     }
 
     if(type == "circle") {
-
-      const {centerX, centerY, radiusX, radiusY,strokeColor, bgColor, id } =selectedElement;
-
-      const offsetX = x -centerX;
-      const offsetY = y - centerY;
-      
-      const newX = clientX -offsetX;
-      const newY = clientY -offsetY;
-
+      const { x1, y1, x2, y2, strokeColor, bgColor, id } = selectedElement;
+      // Original center
+      const centerX0 = (x1 + x2) / 2;
+      const centerY0 = (y1 + y2) / 2;
+      // Offset from center
+      const offsetX = x - centerX0;
+      const offsetY = y - centerY0;
+      // New center based on mouse movement
+      const newCenterX = clientX - offsetX;
+      const newCenterY = clientY - offsetY;
+      // Radii
+      const radiusX = Math.abs(x2 - x1) / 2;
+      const radiusY = Math.abs(y2 - y1) / 2;
+      // Compute new bounding box corners
+      const newX1 = newCenterX - radiusX;
+      const newY1 = newCenterY - radiusY;
+      const newX2 = newCenterX + radiusX;
+      const newY2 = newCenterY + radiusY;
       shapesRef.current[index] = {
         id,
         strokeColor,
         bgColor,
-        type:"circle",
-        centerX:newX,
-        centerY:newY,
-        radiusX,
-        radiusY
-    }
+        type: "circle",
+        x1: newX1,
+        y1: newY1,
+        x2: newX2,
+        y2: newY2,
+      };
     }
 
     reDrawShapes();

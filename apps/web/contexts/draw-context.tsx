@@ -3,44 +3,55 @@
 import { createContext, useEffect, useRef } from "react";
 import useTools from "../hooks/useTools";
 
-export type RectShape = {
-  type: "rect";
-  id: string;
-  startX: number;
-  startY: number;
-  strokeColor: string;
-  bgColor: string;
-  width: number;
-  height: number;
-};
+// export type RectShape = {
+//   type: "rect";
+//   id: string;
+//   startX: number;
+//   startY: number;
+//   strokeColor: string;
+//   bgColor: string;
+//   width: number;
+//   height: number;
+// };
 
-export type CircleShape = {
-  type: "circle";
-  id: string;
-  strokeColor: string;
-  bgColor: string;
-  centerX: number;
-  centerY: number;
-  radiusX: number;
-  radiusY: number;
-};
+// export type CircleShape = {
+//   type: "circle";
+//   id: string;
+//   strokeColor: string;
+//   bgColor: string;
+//   centerX: number;
+//   centerY: number;
+//   radiusX: number;
+//   radiusY: number;
+// };
 
-export type LineShape = {
-  type: "line";
-  id: string;
-  strokeColor: string;
-  startX: number;
-  startY: number;
-  lastX: number;
-  lastY: number;
-};
+// export type LineShape = {
+//   type: "line";
+//   id: string;
+//   strokeColor: string;
+//   startX: number;
+//   startY: number;
+//   lastX: number;
+//   lastY: number;
+// };
 
 export type OurMouseEvent = {
   clientX: number;
   clientY: number;
 };
 
-export type Shape = RectShape | CircleShape | LineShape;
+// export type Shape = RectShape | CircleShape | LineShape;
+
+export type Shape = {
+    id:string,
+    type:"rect" | "circle" | "line",
+    x1:number,
+    y1:number,
+    x2:number,
+    y2:number,
+    strokeColor:string,
+    bgColor:string
+}
 
 type DrawContextType = {
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
@@ -252,37 +263,43 @@ export const DrawContextProvider = ({
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-
-
     shapesRef.current.forEach((shape) => {
       if (shape.type === "rect") {
+
+        const x = Math.min(shape.x1, shape.x2);
+        const y = Math.min(shape.y1, shape.y2);
+        const w = Math.abs(shape.x2 - shape.x1);
+        const h = Math.abs(shape.y2 - shape.y1);
+
+
+
         drawRect(
           shape.strokeColor,
           shape.bgColor,
-          shape.startX,
-          shape.startY,
-          shape.width,
-          shape.height
+         x,
+          y,
+          w,
+          h
         );
       }
       if (shape.type === "circle") {
-        drawCircle(
-          shape.strokeColor,
-          shape.bgColor,
-          shape.centerX,
-          shape.centerY,
-          shape.radiusX,
-          shape.radiusY
-        );
+
+        const x = Math.min(shape.x1, shape.x2);
+        const y = Math.min(shape.y1, shape.y2);
+        const w = Math.abs(shape.x2 - shape.x1);
+        const h = Math.abs(shape.y2 - shape.y1);
+        const cx = x + w / 2;
+        const cy = y + h / 2;
+        drawCircle(shape.strokeColor, shape.bgColor, cx, cy, w / 2, h / 2);
       }
       if (shape.type === "line") {
         drawLine(
-          shape.strokeColor,
-          shape.startX,
-          shape.startY,
-          shape.lastX,
-          shape.lastY
-        );
+            shape.strokeColor,
+            shape.x1,
+            shape.y1,
+            shape.x2,
+            shape.y2
+          );
       }
     });
 

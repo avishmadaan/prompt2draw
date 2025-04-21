@@ -81,13 +81,14 @@ const useLineTool = () => {
       ...shapes,
       {
         type: "line" as const,
-        id: id,
+        id,
+        x1: x,           // your stored mouse-down X
+        y1: y,           // your stored mouse-down Y
+        x2: currentX,           // the final mouse-up X
+        y2: currentY,           // the final mouse-up Y
         strokeColor: colorRef.current,
-        startX: x,
-        startY: y,
-        lastX: currentX,
-        lastY: currentY,
-      },
+        bgColor: "null"  // or omit bgColor if unused for lines
+      }
     ];
 
     shapesRef.current = newShapes;
