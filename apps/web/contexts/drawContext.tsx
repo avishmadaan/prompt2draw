@@ -146,6 +146,8 @@ export const DrawContextProvider = ({
     y: number;
   }>({ x: 0, y: 0 });
 
+
+
   const drawLine = (
     strokeColor: string,
     startX: number,
@@ -255,6 +257,7 @@ export const DrawContextProvider = ({
   };
 
   const reDrawShapes = () => {
+    console.log("redrawing called")
     const canvas = canvasRef.current;
     if (!canvas) return;
 

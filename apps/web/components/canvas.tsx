@@ -8,7 +8,7 @@ import useHandTool from "../hooks/useHandTool";
 import useSelectTool from "../hooks/useSelectTool";
 import useErasorTool from "../hooks/useErasorTool";
 import useTools from "../hooks/useTools";
-import { OurMouseEvent } from "../contexts/draw-context";
+import { OurMouseEvent } from "../contexts/drawContext";
 
 const Canvas = () => {
   const {
@@ -22,6 +22,7 @@ const Canvas = () => {
     zoomRef,
     offSet,
     scaleOffSetRef,
+    reDrawShapes
   } = useDraw();
 
   const { setToolSelected, toolSelected } = useTools();
@@ -46,17 +47,31 @@ const Canvas = () => {
   const previousToolRef = useRef(toolSelected);
 
   useEffect(() => {
-    console.log("setting dimensions");
 
     const canvas = canvasRef.current;
+    if (!canvas) return;
 
-    if (canvas && canvasRef.current) {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
+    canvas.style.cursor ="crosshair"
 
-      canvasRef.current.style.cursor = "crosshair";
-    }
-  }, []);
+  }, [])
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const resizeCanvas = () => {
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
+      reDrawShapes();
+    };
+    // initial sizing
+    resizeCanvas();
+    // update on window resize
+    window.addEventListener("resize", resizeCanvas);
+
+    return () => {
+      window.removeEventListener("resize", resizeCanvas);
+    };
+  }, [reDrawShapes]);
 
   const getClientCoordinates = (event: MouseEvent): OurMouseEvent => {
     const { offsetX, offsetY } = offSet.current;
@@ -153,6 +168,11 @@ const Canvas = () => {
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
+
+      const tag = (event.target as HTMLElement).tagName;
+      const isInput = tag === "INPUT" || tag === "TEXTAREA" 
+      if(isInput) return;
+
       if (event.key == "Shift") {
         shiftPressed.current = true;
       }
@@ -165,6 +185,11 @@ const Canvas = () => {
     };
 
     const handleKeyUp = (event: KeyboardEvent) => {
+
+      const tag = (event.target as HTMLElement).tagName;
+      const isInput = tag === "INPUT" || tag === "TEXTAREA" 
+      if(isInput) return;
+      
       if (event.key == "Shift") {
         shiftPressed.current = false;
       }
@@ -193,9 +218,7 @@ const Canvas = () => {
   return (
     <canvas
       ref={canvasRef}
-      width={""}
-      height={""}
-      className={`inset-0 absolute w-full h-full    `}
+      className="inset-0 absolute w-full h-full border-4 border-yellow-500"
     />
   );
 };

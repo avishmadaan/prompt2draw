@@ -1,7 +1,7 @@
 "use client"
 
 import { useContext} from "react";
-import { DrawContext } from "../contexts/draw-context";
+import { DrawContext } from "../contexts/drawContext";
 
 
 

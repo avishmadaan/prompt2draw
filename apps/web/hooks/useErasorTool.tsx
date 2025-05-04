@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDraw } from './useDraw';
 import { getElementAtPosition } from '../utils/selectUtils';
-import { OurMouseEvent } from '../contexts/draw-context';
+import { OurMouseEvent } from '../contexts/drawContext';
 
 const useErasorTool = () => {
 

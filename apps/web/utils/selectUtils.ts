@@ -1,11 +1,11 @@
-import { Shape } from "../contexts/draw-context";
+import { Shape } from "../contexts/drawContext";
 
 
 
 
 export const getElementAtPosition =(x:number, y:number, shapes:Shape[]) => {
 
-    return shapes.reverse().find(shape =>  iSWithinElement(x,y,shape))
+    return [...shapes].reverse().find(shape => iSWithinElement(x, y, shape));
   }
 
  export const iSWithinElement = (x:number, y:number, shape:Shape) => {

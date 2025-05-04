@@ -41,7 +41,7 @@ export default function Home() {
 
         {/* Call-to-Action using your prebuilt Button component */}
         <div className="animate-[fade-in_2.5s_ease-in-out] mt-6 ">
-          <Button variant="primary" size="lg" onClick={() => router.push("/draw")} className="mx-auto bg-white text-black">
+          <Button variant="primary" size="lg" onClick={() => router.push("/draw")} className="mx-auto bg-white !text-black">
             Start Drawing
           </Button>
         </div>

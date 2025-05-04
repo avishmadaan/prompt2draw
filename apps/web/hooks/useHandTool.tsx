@@ -1,6 +1,7 @@
-import React, { useRef } from 'react'
+"use client";
+import React, { useRef, useEffect } from 'react'
 import { useDraw } from './useDraw'
-import { OurMouseEvent } from '../contexts/draw-context';
+import { OurMouseEvent } from '../contexts/drawContext';
 
 const useHandTool = () => {
 
@@ -20,28 +21,40 @@ const useHandTool = () => {
         startPosRef.current = { x, y };
         isDrawingRef.current = true;
       };
+
+      let panScheduled = false;
     
     const handHandleMouseMove = (
         event: OurMouseEvent
       ) => {
-        const canvas = canvasRef.current;
-        const ctx = canvas?.getContext("2d");
-        if (!isDrawingRef.current || !startPosRef.current ||!ctx) return;
+
+        if (!isDrawingRef.current || !startPosRef.current ) return;
      
         const currentX = event.clientX;
         const currentY = event.clientY;
         const { x, y } = startPosRef.current;
     
         // Scale the movement by the inverse of the zoom level
-        const dx = (currentX - x) / zoomRef.current;
-        const dy = (currentY - y) / zoomRef.current;
+        const dx = (currentX - x) ;
+        const dy = (currentY - y) ;
       
         offSet.current = {
             offsetX: dx + initialOffSetRef.current.offsetX,
-            offsetY: dy + initialOffSetRef.current.offsetY
+            offsetY:dy + initialOffSetRef.current.offsetY
         }
 
-        reDrawShapes();
+       if(!panScheduled) {
+        panScheduled =true;
+
+        window.requestAnimationFrame(() => {
+            reDrawShapes();
+            panScheduled =false;
+        })
+       }
+
+
+
+    
       };
     
     return {

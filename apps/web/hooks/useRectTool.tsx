@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { DrawContext, OurMouseEvent } from '../contexts/draw-context';
+import { DrawContext, OurMouseEvent } from '../contexts/drawContext';
 import {v4 as uuidv4} from 'uuid';
 import { useDraw } from './useDraw';
 import useTools from './useTools';

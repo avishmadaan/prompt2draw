@@ -8,6 +8,7 @@ import ColorBar from "../../components/color-bar";
 import Canvas from "../../components/canvas";
 import useTools from "../../hooks/useTools";
 import UndoRedo from "../../components/undoRedo";
+import { Notification } from "../../components/notification";
 
 const DrawPage = () => {
 
@@ -17,7 +18,13 @@ const DrawPage = () => {
   return (
     <div className={`p-4 relative h-screen overflow-hidden `}>
 
-      <Canvas  />
+      <Canvas />
+
+      <Notification
+        type="positive"
+        closeNotification={() => {}}
+        message="Hello"
+      />
 
       <ToolBar className="absolute h-16 top-4 left-1/2 -translate-x-1/2" />
 

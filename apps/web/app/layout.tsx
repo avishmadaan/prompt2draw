@@ -5,8 +5,9 @@ import { Fira_Code, Geist } from "next/font/google";
 import { ThemeProvider } from 'next-themes'
 import { ToolContextProvider } from "../hooks/useTools";
 
-import { AiContextProvider } from "../hooks/useAi";
-import { DrawContextProvider } from "../contexts/draw-context";
+import { DrawContextProvider } from "../contexts/drawContext";
+import { AiContextProvider } from "../contexts/aiContext";
+import { NotificationProvider } from "../contexts/notificationContext";
 
 const firaCode = Fira_Code({
   variable: "--font-fira-code",
@@ -37,7 +38,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${firaCode.variable}  ${geistCode.variable} antialiased`} >
+      <body className={`${firaCode.variable}  ${geistCode.variable} antialiased relative`} >
+        <NotificationProvider>
       <ToolContextProvider>
       <DrawContextProvider>
 
@@ -51,6 +53,7 @@ export default function RootLayout({
       
         </DrawContextProvider>
         </ToolContextProvider>
+        </NotificationProvider>
     
       </body>
     </html>

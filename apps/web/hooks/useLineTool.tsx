@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { useDraw } from "./useDraw";
-import { OurMouseEvent } from "../contexts/draw-context";
+import { OurMouseEvent } from "../contexts/drawContext";
 
 const useLineTool = () => {
   const {
@@ -27,9 +27,7 @@ const useLineTool = () => {
   };
 
   const lineHandleMouseMove = (event: OurMouseEvent) => {
-    if (canvasRef.current) {
-      canvasRef.current.style.cursor = "add";
-    }
+
 
     const canvas = canvasRef.current;
     if (!canvas) return;
