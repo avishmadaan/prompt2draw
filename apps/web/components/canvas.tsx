@@ -218,7 +218,7 @@ const Canvas = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="inset-0 absolute w-full h-full border-4 border-yellow-500"
+      className="inset-0 absolute w-full h-full "
     />
   );
 };
