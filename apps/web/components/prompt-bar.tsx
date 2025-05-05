@@ -23,7 +23,15 @@ const PromptBar = ({
 
     if(!shapesRef.current) return;
 
-    if(promptInput.current && promptInput.current.value =="") return;
+    if(promptInput.current && promptInput.current.value =="") {
+
+      showNotification({
+        type:"negative",
+        message:"Empty Input"
+      })
+      
+      return;
+    }
 
 //     if(promptInput.current && promptInput.current.value == "") {
 //       showNotification({

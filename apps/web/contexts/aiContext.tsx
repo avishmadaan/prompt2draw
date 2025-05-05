@@ -1,8 +1,9 @@
 "use client";
 import axios from "axios";
-import { createContext, useContext, useRef } from "react";
+import { createContext, useRef } from "react";
 import { useDraw } from "../hooks/useDraw";
 import { Shape } from "./drawContext";
+import { useNotification } from "../hooks/useNotification";
 
 export type AiContextType = {
   promptInput: React.RefObject<HTMLInputElement | null>;
@@ -22,6 +23,7 @@ export const AiContextProvider = ({
   children: React.ReactNode;
 }) => {
   const { reDrawShapes, shapesRef } = useDraw();
+  const {showNotification} = useNotification();
 
   const promptInput = useRef<HTMLInputElement | null>(null);
 
@@ -100,6 +102,15 @@ Do NOT include any explanations or extra keys—just the JSON array.
       const shapes: Shape[] = JSON.parse(
         response.data.choices[0].message.content
       );
+
+      if(shapes.length==0) {
+        showNotification({
+            type:"negative",
+            message:"Prompt is not Valid, Enter a different one"
+        })
+
+        return;
+      }
       console.log("Shapes received:", shapes);
 
       // TODO: Process the shapes and draw them
@@ -115,6 +126,10 @@ Do NOT include any explanations or extra keys—just the JSON array.
     } catch (err) {
       console.error("Error during chat completion:", err);
       // TODO: Show error notification to user
+      showNotification({
+        type:"negative",
+        message:"Error while fetching Shapes"
+      })
     }
   };
 

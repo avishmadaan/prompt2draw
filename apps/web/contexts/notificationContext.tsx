@@ -45,19 +45,19 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
   return (
     <NotificationContext.Provider value={{ showNotification }}>
       {children}
-      {mounted && createPortal(
-        <div className="fixed top-0 left-0 w-full h-0 pointer-events-none z-[9999]">
+
+   
           {notifications.map((item, index) => (
             <Notification
               key={item.id}
               {...item}
               closeNotification={() => closeNotification(item.id)}
-              style={{ top: `${index * 60 + 20}px` }}
+              style={{ bottom: `${index * 60 + 20}px`, right:"20px" }}
             />
           ))}
-        </div>,
-        document.body
-      )}
+
+
+      
     </NotificationContext.Provider>
   );
 };
@@ -71,7 +71,7 @@ export const Notification = ({ message, type, closeNotification, style }: Notifi
   return (
     <div
       style={style}
-      className={`fixed left-1/2 -translate-x-1/2 p-4 rounded-lg shadow-lg text-white flex items-center gap-2 min-w-[200px] pointer-events-auto ${
+      className={`fixed right-4  p-4  rounded-lg shadow-lg text-white flex items-center gap-2 min-w-[200px] pointer-events-auto ${
         type === "positive" ? "bg-blue-500" : "bg-red-500"
       }`}
     >
