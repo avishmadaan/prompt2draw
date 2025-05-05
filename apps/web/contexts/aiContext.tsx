@@ -5,8 +5,8 @@ import { useDraw } from "../hooks/useDraw";
 import { Shape } from "./drawContext";
 
 export type AiContextType = {
-    promptInput:React.RefObject<HTMLInputElement | null>
-    getAiReply:() => Promise<void> 
+  promptInput: React.RefObject<HTMLInputElement | null>;
+  getAiReply: () => Promise<void>;
 };
 
 export interface Message {
@@ -21,22 +21,24 @@ export const AiContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const { reDrawShapes, shapesRef } = useDraw();
 
-    const { reDrawShapes, shapesRef} = useDraw();
-
-    const promptInput = useRef<HTMLInputElement | null>(null);
-
-
-
+  const promptInput = useRef<HTMLInputElement | null>(null);
 
   const getAiReply = async () => {
-    if(!promptInput.current) return;
+    if (!promptInput.current) return;
 
     const systemMessage: Message = {
       role: "system",
       content: `
-      You are a shape‑drawing assistant.  
-      When you receive a user prompt, you MUST reply with a single JSON array of shape instructions—nothing else.  
+      You are a drawing assistant.  
+When you receive a user prompt, you MUST do these two things—**in order**—and output only a JSON array of shape objects:
+
+1. Internally rewrite the user’s text into a precise drawing spec (do NOT emit it in the response).  
+2. Based on that spec, emit your array of shape instructions.
+
+Do NOT include any explanations or extra keys—just the JSON array.
+ 
       Each array entry must be an object with exactly these fields:
       
       • id (string): a unique identifier (UUID) for that shape  
@@ -62,31 +64,31 @@ export const AiContextProvider = ({
 
       
       Only use the three types above. Do NOT include any markdown, explanations, or extra keys—just the JSON array.  
-      `
+      `,
     };
 
     const prompt: Message = {
       role: "user",
-      content: promptInput.current.value || ""
+      content: promptInput.current.value || "",
     };
 
-    console.log(process.env.NEXT_PUBLIC_OPENAI)
+    console.log("Drawing Started");
     const key = process.env.NEXT_PUBLIC_OPENAI;
 
     try {
       const response = await axios.post(
         "https://api.openai.com/v1/chat/completions",
         {
-          model: "gpt-4o",
+          model: "o4-mini",
           messages: [systemMessage, prompt],
-          temperature: 0.3,
-        //   top_p:0,
+        //   temperature: 0.5,
+          //   top_p:0,
         },
         {
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${key}`
-          }
+            Authorization: `Bearer ${key}`,
+          },
         }
       );
 
@@ -94,30 +96,31 @@ export const AiContextProvider = ({
         throw new Error("Invalid response from OpenAI");
       }
 
-      console.log(response.data.choices[0].message.content)
-      const shapes:Shape[] = JSON.parse(response.data.choices[0].message.content);
+      console.log(response.data.choices[0].message.content);
+      const shapes: Shape[] = JSON.parse(
+        response.data.choices[0].message.content
+      );
       console.log("Shapes received:", shapes);
 
-
-      
       // TODO: Process the shapes and draw them
 
       shapes.forEach((shape, i) => {
         setTimeout(() => {
-          shapesRef.current = [
-            ...shapesRef.current,
-            shape
-          ];
+          shapesRef.current = [...shapesRef.current, shape];
           reDrawShapes();
-        }, i * 500); 
+        }, i * 500);
       });
-      
-      
+
+      console.log("Drawing Finished")
     } catch (err) {
       console.error("Error during chat completion:", err);
       // TODO: Show error notification to user
     }
   };
 
-  return <AiContext.Provider value={{promptInput, getAiReply}}>{children}</AiContext.Provider>;
+  return (
+    <AiContext.Provider value={{ promptInput, getAiReply }}>
+      {children}
+    </AiContext.Provider>
+  );
 };
