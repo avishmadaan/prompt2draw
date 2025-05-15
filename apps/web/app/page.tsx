@@ -25,7 +25,7 @@ export default function Home() {
 
       <div className="relative z-10 text-center space-y-10 max-w-2xl mx-auto px-4">
         {/* Subheadline */}
-        <h3 className="bg-white rounded-full px-6 py-2 text-black text-md f inline-block animate-[fade-in_1s_ease-in-out]">
+        <h3 className="bg-gray-300 rounded-full px-6 py-2 text-black text-md f inline-block animate-[fade-in_1s_ease-in-out]">
           Where Excalidraw Meets AI
         </h3>
 

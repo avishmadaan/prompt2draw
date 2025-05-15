@@ -4,6 +4,7 @@ import { createContext, useRef } from "react";
 import { useDraw } from "../hooks/useDraw";
 import { Shape } from "./drawContext";
 import { useNotification } from "../hooks/useNotification";
+import { useTheme } from "next-themes";
 
 export type AiContextType = {
   promptInput: React.RefObject<HTMLInputElement | null>;
@@ -24,6 +25,7 @@ export const AiContextProvider = ({
 }) => {
   const { reDrawShapes, shapesRef } = useDraw();
   const {showNotification} = useNotification();
+  const {theme} = useTheme();
 
   const promptInput = useRef<HTMLInputElement | null>(null);
 
@@ -38,6 +40,10 @@ When you receive a user prompt, you MUST do these two things—**in order**—an
 
 1. Internally rewrite the user’s text into a precise drawing spec (do NOT emit it in the response).  
 2. Based on that spec, emit your array of shape instructions.
+
+Important: 
+1. Always draw at the center of the screen decent big enough in size.(Don't make it small).
+2. User current screen mode is ${theme}, so choose color accordingly which will be visible on this mode.
 
 Do NOT include any explanations or extra keys—just the JSON array.
  
@@ -63,6 +69,7 @@ Do NOT include any explanations or extra keys—just the JSON array.
           "bgColor":"none"
         }
       ]
+        
 
       
       Only use the three types above. Do NOT include any markdown, explanations, or extra keys—just the JSON array.  
